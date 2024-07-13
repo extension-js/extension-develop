@@ -34,7 +34,7 @@ console.log('EXTENSION_PROJECT_PATH:', EXTENSION_PROJECT_PATH)
 console.log('EXTENSION_PROJECT_FLAGS:', EXTENSION_PROJECT_FLAGS)
 
 // Map command to the appropriate rsbuild command
-const rsbuildCommandMap = {
+const rsbuildCommandMap: Record<string, string> = {
   dev: 'rsbuild dev',
   preview: 'rsbuild preview',
   build: 'rsbuild build'
@@ -49,7 +49,7 @@ if (!rsbuildCommand) {
 
 // Function to process flags. These flags are passed directly
 // to the rsbuild command and do not need the .env file to be set
-const processFlags = (flags) => {
+const processFlags = (flags: string[]) => {
   const processedFlags = flags.map((flag) => {
     if (flag === '-w' || flag === '--watch') {
       return '--watch'

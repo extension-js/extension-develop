@@ -13,7 +13,6 @@ const MANIFEST_PATH = path.join(__dirname, projectPath, 'manifest.json')
 
 const sharedConfig = defineConfig({
   plugins: [
-    extensionPlugins.pluginScripts({manifestPath: MANIFEST_PATH}),
   ],
   // dev: {},
   // html: {},

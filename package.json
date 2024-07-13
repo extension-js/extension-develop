@@ -1,11 +1,31 @@
 {
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cezaraugusto/extension.git",
+    "directory": "programs/develop"
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "name": "extension-develop",
   "version": "1.0.0",
+  "description": "The develop step of Extension.js",
+  "main": "./dist/module.js",
+  "types": "./dist/module.d.ts",
+  "files": [
+    "dist"
+  ],
+  "author": {
+    "name": "Cezar Augusto",
+    "email": "boss@cezaraugusto.net",
+    "url": "https://cezaraugusto.com"
+  },
   "bin": {
     "extension-develop": "./module.js"
   },
   "scripts": {
-    "extension-develop": "node module.js",
+    "extension-develop": "ts-node module.ts",
     "build": "rsbuild build",
     "format": "prettier --write .",
     "lint": "eslint .",
@@ -15,6 +35,7 @@
   "dependencies": {
     "@rsbuild/core": "1.0.1-beta.0",
     "detect-package-manager": "^3.0.2",
+    "ts-node": "^10.9.2",
     "webextension-polyfill": "^0.12.0"
   }
 }
