@@ -2,7 +2,7 @@ import path from 'path'
 import {type RsbuildPlugin} from '@rsbuild/core'
 
 // Manifest fields
-import manifestFields from '../manifest-fields/module'
+import manifestFields from '../manifest-fields'
 
 import {type PluginInterface} from '../types'
 import {getScriptEntries, getCssEntries} from '../utils'

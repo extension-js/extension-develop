@@ -13,8 +13,8 @@ export interface ThemeIcon {
   size?: number
 }
 
-export interface PluginInterface {
-  manifestPath: string
+export type PluginInterface = {
+  manifestPath?: string
   includeList?: IncludeList
   exclude?: string[]
 }

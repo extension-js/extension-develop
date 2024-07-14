@@ -1,6 +1,6 @@
 import path from 'path'
 import {defineConfig, mergeRsbuildConfig} from '@rsbuild/core'
-import * as extensionPlugins from './setup-extension'
+import {pluginExtension} from './plugin-extension'
 
 // TODO: Have a place to parse these
 const projectPath = process.env.EXTENSION_PROJECT_PATH || ''
@@ -13,6 +13,7 @@ const MANIFEST_PATH = path.join(__dirname, projectPath, 'manifest.json')
 
 const sharedConfig = defineConfig({
   plugins: [
+    pluginExtension({manifestPath: MANIFEST_PATH})
   ],
   // dev: {},
   // html: {},
