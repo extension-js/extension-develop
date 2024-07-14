@@ -1,9 +1,13 @@
+import path from 'path'
 import { RsbuildPlugin } from '@rsbuild/core'
 import { PluginInterface } from '../types'
 import {
   scanPublicFilesInFolder,
   scanHtmlFilesInFolder,
-  scanScriptFilesInFolder
+  scanScriptFilesInFolder,
+  generatePublicEntries,
+  generatePagesEntries,
+  generateScriptsEntries,
 } from './generate-entries'
 import {copyPublicFolder} from './copy-public-folder'
 import {warnUponFolderChanges} from './warn-upon-folder-changes'
@@ -18,8 +22,6 @@ import {warnUponFolderChanges} from './warn-upon-folder-changes'
  */
 export const specialFolders = ({
   manifestPath = '',
-  includeList = {},
-  exclude = []
 }: Partial<PluginInterface> = {}): RsbuildPlugin => ({
   name: 'plugin-extension:special-folders',
   setup: (api) => {
@@ -37,11 +39,16 @@ export const specialFolders = ({
     const allPublic = scanPublicFilesInFolder(publicFolder)
     const allPages = scanHtmlFilesInFolder(pagesFolder)
     const allScripts = scanScriptFilesInFolder(projectPath, scriptsFolder)
+
+    // resolve-plugin expects a key-value pair of all files
+    const publicList = generatePublicEntries(projectPath, allPublic)
+    const pagesList = generatePagesEntries(allPages)
+    const scriptsList = generateScriptsEntries(allScripts)
     
     api.expose('special-folders', () => ({
-      public: allPublic,
-      pages: allPages,
-      scripts: allScripts
+      public: publicList,
+      pages: pagesList,
+      scripts: scriptsList
     }));
 
     copyPublicFolder({manifestPath}).setup(api)

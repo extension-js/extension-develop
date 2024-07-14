@@ -14,9 +14,12 @@ export interface ThemeIcon {
 }
 
 export type PluginInterface = {
-  manifestPath?: string
-  includeList?: IncludeList
-  exclude?: string[]
+  manifestPath: string
+}
+
+export type InternalPluginInterface = {
+  manifestPath: string
+  includeList: IncludeList
 }
 
 export type IncludeList = Record<string, string>

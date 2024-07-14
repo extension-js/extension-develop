@@ -1,30 +1,21 @@
-import path from 'path'
 import {type RsbuildPlugin} from '@rsbuild/core'
 
-// Manifest fields
-import manifestFields from '../manifest-fields'
+import {type InternalPluginInterface} from '../types'
+import {getScriptEntries, getCssEntries} from './utils'
 
-import {type PluginInterface} from '../types'
-import {getScriptEntries, getCssEntries} from '../utils'
-
-export const pluginScripts = ({
+export const addScripts = ({
   manifestPath,
   includeList,
-  exclude = []
-}: PluginInterface): RsbuildPlugin => ({
-  name: 'extension-develop:scripts',
-  setup: async (api) => {
-    const scriptFields = {
-      ...manifestFields(manifestPath).scripts,
-      ...includeList
-    }
-
+}: InternalPluginInterface): RsbuildPlugin => ({
+  name: 'scripts:add-scripts',
+  setup: (api) => {
     let scriptEntries = {}
 
-    for (const field of Object.entries(scriptFields)) {
+    for (const field of Object.entries(includeList)) {
       const [feature, scriptPath] = field
-      const scriptImports = getScriptEntries(manifestPath, scriptPath, exclude)
-      const cssImports = getCssEntries(manifestPath, scriptPath, exclude)
+
+      const scriptImports = getScriptEntries(manifestPath, scriptPath)
+      const cssImports = getCssEntries(manifestPath, scriptPath)
       const entryImports = [...cssImports, ...scriptImports]
 
       // During development, we extract the content_scripts css files from
@@ -32,9 +23,9 @@ export const pluginScripts = ({
       // so we can benefit from HMR.
       // In production we don't need that, so we add the files to the entry points
       // along with other content_script files.
-      // if (compiler.options.mode === 'production') {
-      //   entryImports.push(...cssImports)
-      // }
+      if (process.env.NODE_ENV === 'production') {
+        entryImports.push(...cssImports)
+      }
 
       if (cssImports.length || scriptImports.length) {
         scriptEntries = {

@@ -18,7 +18,6 @@ export function getRelativePath(from: string, to: string) {
 export function getScriptEntries(
   manifestPath: string,
   scriptPath: string | string[] | undefined,
-  exclude: string[]
 ): string[] {
   const projectPath = path.dirname(manifestPath)
  
@@ -34,7 +33,7 @@ export function getScriptEntries(
       // File exists
       fs.existsSync(asset) &&
       // Not in some public/ folder
-      !shouldExclude(asset, exclude)
+      asset.includes('public/')
 
     const assetExtension = path.extname(asset)
 
@@ -47,7 +46,6 @@ export function getScriptEntries(
 export function getCssEntries(
   manifestPath: string,
   scriptPath: string | string[] | undefined,
-  exclude: string[]
 ): string[] {
   const projectPath = path.dirname(manifestPath)
 
@@ -64,7 +62,7 @@ export function getCssEntries(
       // File exists
       fs.existsSync(asset) &&
       // Not in some public/ folder
-      !shouldExclude(asset, exclude)
+      asset.includes('public/')
 
     return (
       (validFile && asset.endsWith('.css')) ||

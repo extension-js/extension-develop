@@ -6,22 +6,33 @@ import {pluginExtension} from './plugin-extension'
 const projectPath = process.env.EXTENSION_PROJECT_PATH || ''
 const projectFlags = process.env.EXTENSION_PROJECT_FLAGS || ''
 
-console.log('CLI_PROJECT_PATH:', projectPath)
-console.log('CLI_PROJECT_FLAGS:', projectFlags)
-
 const MANIFEST_PATH = path.join(__dirname, projectPath, 'manifest.json')
+const TARGET_BROWSER = 'chrome'
+
+console.log('MANIFEST_PATH:', __dirname, projectPath)
+// console.log('EXTENSION_PROJECT_FLAGS:', projectFlags)
+// console.log('TARGET_BROWSER:', TARGET_BROWSER)
 
 const sharedConfig = defineConfig({
   plugins: [
     pluginExtension({manifestPath: MANIFEST_PATH})
   ],
-  // dev: {},
-  // html: {},
+  dev: {
+    writeToDisk: true,
+  },
+  html: {
+    outputStructure: 'nested',
+  },
   // tools: {},
-  // output: {},
+  output: {
+    manifest: true,
+    distPath: {
+      root: path.join(__dirname, projectPath, 'dist', TARGET_BROWSER),
+    }
+  },
   source: {
     entry: {
-      main: `${projectPath}/index.js`
+      'fake_manifest': `${projectPath}/manifest.json`
     }
   }
   // server: {},

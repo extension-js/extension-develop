@@ -8,7 +8,17 @@ import scriptsFromManifest from './scripts-fields'
 import webResourcesFromManifest from './web-resources-fields'
 import {type Manifest} from '../types'
 
-function exposeFields(manifest: Manifest, api: RsbuildPluginAPI) {
+// TODO: cezaraugusto type this
+export interface ManifestFields {
+  html: Record<string, any>,
+  icons: Record<string, any>,
+  json: Record<string, any>,
+  // locales: string,
+  scripts: Record<string, any>,
+  web_accessible_resources: Record<string, any>,
+}
+
+function getFieldsData(manifest: Manifest) {
   const fieldData = {
     html: htmlFromManifest(manifest),
     icons: iconFromManifest(manifest),
@@ -17,24 +27,18 @@ function exposeFields(manifest: Manifest, api: RsbuildPluginAPI) {
     scripts: scriptsFromManifest(manifest),
     web_accessible_resources: webResourcesFromManifest(manifest)
   }
-
-  api.expose('manifest-fields', () => fieldData);
+  return fieldData
 }
 
-export const manifestFields = ({
-  manifestPath ='',
-  includeList = {},
-  exclude = []
-}: Partial<PluginInterface> = {}): RsbuildPlugin => ({
+export const getManifestFieldsData = (manifest: Manifest) => {
+    return getFieldsData(manifest)
+}
+
+export const manifestFields = (): RsbuildPlugin => ({
   name: 'plugin-extension:manifest-fields',
   setup: (api) => {
-    // Allow this plugin to run indenependently
-    // from the plugins chain if a manifest.json
-    // is provided.
-    const manifest = manifestPath
-      ? require(manifestPath)
-      : api.useExposed('manifest-json')()
-
-    exposeFields(manifest, api)
+    const manifest = api.useExposed('manifest-json')()
+    const fieldsData = getFieldsData(manifest)
+    api.expose('manifest-fields', () => fieldsData);
   }
 })
