@@ -18,10 +18,15 @@ const sharedConfig = defineConfig({
     pluginExtension({manifestPath: MANIFEST_PATH})
   ],
   dev: {
-    writeToDisk: true,
+    writeToDisk: true, // (file) => !file.includes('.hot-update.'),
+    watchFiles: {
+      paths: path.join(projectPath, 'manifest.json')
+    }
   },
   // html: {},
-  // tools: {},
+  tools: {
+    htmlPlugin: false,
+  },
   output: {
     manifest: true,
     distPath: {
@@ -39,8 +44,18 @@ const sharedConfig = defineConfig({
     }
   },
   source: {
+    // include: [path.resolve(__dirname, '../other-dir')],
     entry: {
-      manifest: MANIFEST_PATH,
+      manifest_fake: MANIFEST_PATH,
+      // TODO: exclude bg?
+      // exclude: [
+        // path.join(__dirname, projectPath, 'public'),
+        // MANIFEST_PATH
+      // ],
+    },
+    define: {
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      'process.env.EXTENSION_BROWSER': TARGET_BROWSER
     },
   },
   server: {

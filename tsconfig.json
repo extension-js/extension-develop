@@ -13,5 +13,5 @@
     "useDefineForClassFields": true,
     "allowImportingTsExtensions": true
   },
-  "include": [".", "../_manifest"]
+  "include": ["."]
 }

@@ -2,12 +2,12 @@ import {type RsbuildPlugin} from '@rsbuild/core'
 
 import {type PluginInterface} from '../types'
 
-import {emitManifest} from './emitManifest'
+import {emitManifest} from './emit-manifest'
 import {manifestFields} from './manifest-fields'
 import {checkManifestFiles} from './check-manifest-files'
-import {updateManifest} from './updateManifest'
-// import {addDependencies} from './addDependencies'
-// import {throwIfRecompileIsNeeded} from './throwIfRecompileIsNeeded'
+import {updateManifest} from './update-manifest'
+import {addDependencies} from './add-dependencies'
+import {throwIfRecompileIsNeeded} from './throw-if-recompile-is-needed'
 
 /**
  * ManifestPlugin is responsible for handling the manifest.json file.
@@ -45,12 +45,12 @@ export const manifest = ({
 
     // 5 - Ensure this manifest is stored as file dependency
     // so webpack can watch and trigger changes.
-    // addDependencies([manifestPath]).setup(api)
+    addDependencies({manifestPath}).setup(api)
 
     // 6 - Some files in manifest are used as entrypoints. Since
     // we can't recompile entrypoints at runtime, we need to
     // throw an error if any of those files change.
-    // throwIfRecompileIsNeeded({ manifestPath }).setup(api)
+    throwIfRecompileIsNeeded({ manifestPath }).setup(api)
   }
 })
 

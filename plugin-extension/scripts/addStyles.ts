@@ -15,7 +15,7 @@ export const addStyles = ({
       scriptPath: string
       cssImports: string[]
     }> = []
-    const scriptEntries = Object.entries(scriptFields).filter(
+    const scriptEntries = Object.entries(scriptFields || {}).filter(
       ([feature, scriptPath]) => feature.startsWith('content') && scriptPath
     )
 

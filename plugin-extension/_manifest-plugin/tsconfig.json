@@ -1,5 +1,0 @@
-{
-  "extends": "../../packages/tsconfig/base.json",
-  "include": [".", "../manifest/errors.ts", "../manifest/messages.ts", "../manifest/utils.ts", "../manifest/getFilename.ts"],
-  "exclude": ["dist", "node_modules"]
-}

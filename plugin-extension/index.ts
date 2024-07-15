@@ -6,6 +6,7 @@ import { Manifest } from './types'
 import {specialFolders} from './special-folders'
 import {scripts} from './scripts'
 import {manifest} from './manifest'
+import {html} from './html'
 
 export const pluginExtension = ({
   manifestPath,
@@ -26,5 +27,8 @@ export const pluginExtension = ({
     // which includes background, content, and user scripts.
     // The plugin will also handle scripts declared in scripts/
     scripts({manifestPath}).setup(api)
+
+    // 5 - 
+   html({manifestPath}).setup(api)
   }
 })

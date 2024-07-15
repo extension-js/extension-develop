@@ -12,7 +12,7 @@ export const addScripts = ({
   setup: (api) => {
     let scriptEntries = {}
 
-    for (const field of Object.entries(includeList)) {
+    for (const field of Object.entries(includeList || {})) {
       const [feature, scriptPath] = field
 
       const scriptImports = getScriptEntries(manifestPath, scriptPath)

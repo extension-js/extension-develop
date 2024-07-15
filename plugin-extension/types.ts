@@ -19,7 +19,7 @@ export type PluginInterface = {
 
 export type InternalPluginInterface = {
   manifestPath: string
-  includeList: IncludeList
+  includeList?: IncludeList
 }
 
 export type IncludeList = Record<string, string>
