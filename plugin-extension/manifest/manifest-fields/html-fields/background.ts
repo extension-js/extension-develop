@@ -1,15 +1,15 @@
-import path from 'path'
+import path from 'path';
 
-import {type Manifest} from '../../types'
+import { type Manifest } from '../../types';
 
 export default function background(manifest: Manifest): string | undefined {
   // @ts-ignore
   if (!manifest || !manifest.background || !manifest.background.page) {
-    return undefined
+    return undefined;
   }
 
   // @ts-ignore
-  const backgroundPage: string = manifest.background.page
+  const backgroundPage: string = manifest.background.page;
 
-  return backgroundPage
+  return backgroundPage;
 }

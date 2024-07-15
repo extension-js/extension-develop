@@ -1,10 +1,13 @@
-import path from 'path'
-import {type Manifest} from '../../../types'
-import getFilename from '../../../manifest/getFilename'
+import path from 'path';
+import { type Manifest } from '../../../types';
+import getFilename from '../../../manifest/getFilename';
 
-const getBasename = (filepath: string) => path.basename(filepath)
+const getBasename = (filepath: string) => path.basename(filepath);
 
-export default function theme(compiledEntries: Record<string, any>, publicFolder: string) {
+export default function theme(
+  compiledEntries: Record<string, any>,
+  publicFolder: string,
+) {
   return (
     manifest.theme && {
       theme: {
@@ -14,14 +17,14 @@ export default function theme(compiledEntries: Record<string, any>, publicFolder
             ...manifest.theme.images,
             theme_frame: getFilename(
               `theme/images/${getBasename(
-                manifest.theme.images.theme_frame as string
+                manifest.theme.images.theme_frame as string,
               )}`,
               manifest.theme.images.theme_frame as string,
-              exclude
-            )
-          }
-        })
-      }
+              exclude,
+            ),
+          },
+        }),
+      },
     }
-  )
+  );
 }

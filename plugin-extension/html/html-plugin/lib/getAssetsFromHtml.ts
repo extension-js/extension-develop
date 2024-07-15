@@ -1,66 +1,66 @@
-import fs from 'fs'
-import path from 'path'
+import fs from 'fs';
+import path from 'path';
 // @ts-ignore
-import parse5utils from 'parse5-utils'
-import parseHtml from './parseHtml'
+import parse5utils from 'parse5-utils';
+import parseHtml from './parseHtml';
 
 export interface ParsedHtmlAsset {
-  css?: string[]
-  js?: string[]
-  static?: string[]
+  css?: string[];
+  js?: string[];
+  static?: string[];
 }
 
 export default function getAssetsFromHtml(
   htmlFilePath: string,
-  htmlContent?: string
+  htmlContent?: string,
 ) {
   const htmlString =
-    htmlContent || fs.readFileSync(htmlFilePath, {encoding: 'utf8'})
-  const htmlDocument = parse5utils.parse(htmlString)
+    htmlContent || fs.readFileSync(htmlFilePath, { encoding: 'utf8' });
+  const htmlDocument = parse5utils.parse(htmlString);
 
   const assets: ParsedHtmlAsset = {
     css: [],
     js: [],
-    static: []
-  }
+    static: [],
+  };
 
   const getAbsolutePath = (htmlFilePath: string, filePath: string) => {
     return path.join(
       path.dirname(htmlFilePath),
       filePath.startsWith('/')
         ? path.relative(path.dirname(htmlFilePath), filePath)
-        : filePath
-    )
-  }
+        : filePath,
+    );
+  };
 
   for (const node of htmlDocument.childNodes) {
-    if (node.nodeName !== 'html') continue
+    if (node.nodeName !== 'html') continue;
 
     for (const childNode of node.childNodes) {
       // We don't really care whether the asset is in the head or body
       // element, as long as it's not a regular text note, we're good.
       if (childNode.nodeName === 'head' || childNode.nodeName === 'body') {
-        parseHtml(childNode, ({filePath, assetType}) => {
-          const fileAbsolutePath = getAbsolutePath(htmlFilePath, filePath)
+        parseHtml(childNode, ({ filePath, assetType }) => {
+          const fileAbsolutePath = getAbsolutePath(htmlFilePath, filePath);
 
           switch (assetType) {
             case 'script':
-              assets.js?.push(fileAbsolutePath)
-              break
+              assets.js?.push(fileAbsolutePath);
+              break;
             case 'css':
-              assets.css?.push(fileAbsolutePath)
-              break
+              assets.css?.push(fileAbsolutePath);
+              break;
             case 'staticSrc':
             case 'staticHref':
               if (filePath.startsWith('#')) {
-                break
+                break;
               }
-              assets.static?.push(fileAbsolutePath)
-              break
+              assets.static?.push(fileAbsolutePath);
+              break;
             default:
-              break
+              break;
           }
-        })
+        });
       }
     }
 
@@ -70,7 +70,7 @@ export default function getAssetsFromHtml(
       // Assets frorm HTML pages to use as rspack entries
       js: assets.js,
       // Assets frorm HTML pages to copy to the outputFilePath path
-      static: assets.static
-    }
+      static: assets.static,
+    };
   }
 }

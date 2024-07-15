@@ -1,15 +1,15 @@
-import path from 'path'
-import {type Manifest} from '../../types'
+import path from 'path';
+import { type Manifest } from '../../types';
 
 export default function icons(manifest: Manifest): string[] | undefined {
-  if (!manifest || !manifest.icons) return undefined
+  if (!manifest || !manifest.icons) return undefined;
 
-  const defaultIcons: string[] = []
+  const defaultIcons: string[] = [];
   for (const icon in manifest.icons) {
-    const iconAbsolutePath = manifest.icons[icon]
+    const iconAbsolutePath = manifest.icons[icon];
 
-    defaultIcons.push(iconAbsolutePath)
+    defaultIcons.push(iconAbsolutePath);
   }
 
-  return defaultIcons
+  return defaultIcons;
 }

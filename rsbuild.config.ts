@@ -1,27 +1,25 @@
-import path from 'path'
-import {defineConfig, mergeRsbuildConfig} from '@rsbuild/core'
-import {pluginExtension} from './plugin-extension'
+import path from 'path';
+import { defineConfig, mergeRsbuildConfig } from '@rsbuild/core';
+import { pluginExtension } from './plugin-extension';
 
 // TODO: Have a place to parse these
-const projectPath = process.env.EXTENSION_PROJECT_PATH || ''
-const projectFlags = process.env.EXTENSION_PROJECT_FLAGS || ''
+const projectPath = process.env.EXTENSION_PROJECT_PATH || '';
+const projectFlags = process.env.EXTENSION_PROJECT_FLAGS || '';
 
-const MANIFEST_PATH = path.join(__dirname, projectPath, 'manifest.json')
-const TARGET_BROWSER = 'chrome'
+const MANIFEST_PATH = path.join(__dirname, projectPath, 'manifest.json');
+const TARGET_BROWSER = 'chrome';
 
-console.log('MANIFEST_PATH:', __dirname, projectPath)
+console.log('MANIFEST_PATH:', __dirname, projectPath);
 // console.log('EXTENSION_PROJECT_FLAGS:', projectFlags)
 // console.log('TARGET_BROWSER:', TARGET_BROWSER)
 
 const sharedConfig = defineConfig({
-  plugins: [
-    pluginExtension({manifestPath: MANIFEST_PATH})
-  ],
+  plugins: [pluginExtension({ manifestPath: MANIFEST_PATH })],
   dev: {
     writeToDisk: true, // (file) => !file.includes('.hot-update.'),
     watchFiles: {
-      paths: path.join(projectPath, 'manifest.json')
-    }
+      paths: path.join(projectPath, 'manifest.json'),
+    },
   },
   // html: {},
   // tools: {
@@ -41,7 +39,7 @@ const sharedConfig = defineConfig({
       wasm: 'wasm',
       image: 'image',
       media: 'media',
-    }
+    },
   },
   source: {
     // include: [path.resolve(__dirname, '../other-dir')],
@@ -49,13 +47,13 @@ const sharedConfig = defineConfig({
       manifest_fake: MANIFEST_PATH,
       // TODO: exclude bg?
       // exclude: [
-        // path.join(__dirname, projectPath, 'public'),
-        // MANIFEST_PATH
+      // path.join(__dirname, projectPath, 'public'),
+      // MANIFEST_PATH
       // ],
     },
     define: {
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-      'process.env.EXTENSION_BROWSER': TARGET_BROWSER
+      'process.env.EXTENSION_BROWSER': TARGET_BROWSER,
     },
   },
   server: {
@@ -74,8 +72,8 @@ const sharedConfig = defineConfig({
   // performance: {},
   // moduleFederation: {},
   // environments: {},
-})
+});
 
-const config = mergeRsbuildConfig(sharedConfig, {})
+const config = mergeRsbuildConfig(sharedConfig, {});
 
-export default config
+export default config;

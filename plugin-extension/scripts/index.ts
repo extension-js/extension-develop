@@ -1,8 +1,8 @@
-import {type RsbuildPlugin} from '@rsbuild/core'
+import { type RsbuildPlugin } from '@rsbuild/core';
 
-import {type PluginInterface} from '../types'
-import { addScripts } from './addScripts'
-import { addStyles } from './addStyles'
+import { type PluginInterface } from '../types';
+import { addScripts } from './addScripts';
+import { addStyles } from './addStyles';
 
 /**
  * ScriptsPlugin is responsible for handiling all possible JavaScript
@@ -20,18 +20,16 @@ import { addStyles } from './addStyles'
  * - user_scripts.api_scripts - HMR enabled
  * - scripts via this.include - HMR enabled
  */
-export const scripts = ({
-  manifestPath,
-}: PluginInterface): RsbuildPlugin => ({
+export const scripts = ({ manifestPath }: PluginInterface): RsbuildPlugin => ({
   name: 'plugin-extension:scripts',
   setup: async (api) => {
-    const manifestScripts = api.useExposed('manifest-fields')()
-    const nonManifestScripts = api.useExposed('special-folders')().scripts
+    const manifestScripts = api.useExposed('manifest-fields')();
+    const nonManifestScripts = api.useExposed('special-folders')().scripts;
 
     const scriptFields: Record<string, any> = {
       ...manifestScripts,
-      ...nonManifestScripts
-    }
+      ...nonManifestScripts,
+    };
 
     // 1 - Adds the scripts entries from the manifest file
     // and from the extra scripts defined in this.include
@@ -44,13 +42,13 @@ export const scripts = ({
     addScripts({
       manifestPath: manifestPath,
       includeList: scriptFields.scripts,
-    }).setup(api)
+    }).setup(api);
 
     if (process.env.NODE_ENV === 'development') {
       addStyles({
         manifestPath: manifestPath,
         includeList: scriptFields.scripts,
-      }).setup(api)
+      }).setup(api);
     }
 
     // 2 - Ensure scripts are HMR enabled by adding the HMR accept code.
@@ -76,5 +74,5 @@ export const scripts = ({
     // content_scripts. This skips the MiniCssExtractPlugin loader
     // and allows the CSS to be injected in the DOM via <style> tags.
     // AddQueryParamFromImportedCss(compiler, this.manifestPath)
-  }
-})
+  },
+});

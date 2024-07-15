@@ -1,5 +1,5 @@
-import {type RsbuildPlugin} from '@rsbuild/core'
-import {InternalPluginInterface} from '../types'
+import { type RsbuildPlugin } from '@rsbuild/core';
+import { InternalPluginInterface } from '../types';
 
 export const addDependencies = ({
   manifestPath,
@@ -11,15 +11,12 @@ export const addDependencies = ({
         if (config.dev) {
           config.dev.watchFiles = {
             paths: [
-              ...config.dev.watchFiles 
-              ? config.dev.watchFiles.paths
-              : [],
-              manifestPath
+              ...(config.dev.watchFiles ? config.dev.watchFiles.paths : []),
+              manifestPath,
             ],
-          }
+          };
         }
       }
-    })
-  }
-})
-
+    });
+  },
+});

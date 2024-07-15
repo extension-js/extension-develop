@@ -1,8 +1,8 @@
-import path from 'path'
-import {type RsbuildPlugin} from '@rsbuild/core'
+import path from 'path';
+import { type RsbuildPlugin } from '@rsbuild/core';
 
-import {type InternalPluginInterface} from '../types'
-import {getScriptEntries, getCssEntries} from './utils'
+import { type InternalPluginInterface } from '../types';
+import { getScriptEntries, getCssEntries } from './utils';
 
 export const addScripts = ({
   manifestPath,
@@ -10,18 +10,18 @@ export const addScripts = ({
 }: InternalPluginInterface): RsbuildPlugin => ({
   name: 'scripts:add-scripts',
   setup: (api) => {
-    let scriptEntries = {}
+    let scriptEntries = {};
 
     for (const field of Object.entries(includeList || {})) {
-      const [feature, scriptPath] = field
+      const [feature, scriptPath] = field;
 
-      const scriptImports = getScriptEntries(manifestPath, scriptPath)
-      const cssImports = getCssEntries(manifestPath, scriptPath)
+      const scriptImports = getScriptEntries(manifestPath, scriptPath);
+      const cssImports = getCssEntries(manifestPath, scriptPath);
 
       const entryImports = [
         ...cssImports.map((css) => path.join(path.dirname(manifestPath), css)),
-        ...scriptImports.map((js) => path.join(path.dirname(manifestPath), js))
-      ]
+        ...scriptImports.map((js) => path.join(path.dirname(manifestPath), js)),
+      ];
 
       // During development, we extract the content_scripts css files from
       // content_scripts and inject them as dynamic imports
@@ -35,18 +35,18 @@ export const addScripts = ({
       if (cssImports.length || scriptImports.length) {
         scriptEntries = {
           ...scriptEntries,
-          [feature]: entryImports
-        }
+          [feature]: entryImports,
+        };
       }
     }
 
-    api.modifyRsbuildConfig((config, {mergeRsbuildConfig}) => {
+    api.modifyRsbuildConfig((config, { mergeRsbuildConfig }) => {
       return mergeRsbuildConfig(config, {
         source: {
           ...config.source,
-          entry: scriptEntries
+          entry: scriptEntries,
         },
-      })
-    })
-  }
-})
+      });
+    });
+  },
+});

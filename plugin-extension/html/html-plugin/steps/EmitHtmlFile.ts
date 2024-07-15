@@ -1,22 +1,21 @@
-import fs from 'fs'
-import path from 'path'
-import {type Compiler} from '@rspack/core'
-import {sources} from '@rspack/core'
+import fs from 'fs';
+import path from 'path';
+import { type Compiler } from '@rspack/core';
+import { sources } from '@rspack/core';
 
-import {type IncludeList, type InternalPluginInterface} from '../../../types'
+import { type IncludeList, type InternalPluginInterface } from '../../../types';
 
-
-import {shouldExclude} from '../helpers/utils'
-import errors from '../helpers/errors'
-import getFilePath from '../helpers/getFilePath'
+import { shouldExclude } from '../helpers/utils';
+import errors from '../helpers/errors';
+import getFilePath from '../helpers/getFilePath';
 
 export default class EmitHtmlFile {
-  public readonly manifestPath: string
-  public readonly includeList?: IncludeList 
+  public readonly manifestPath: string;
+  public readonly includeList?: IncludeList;
 
   constructor(options: InternalPluginInterface) {
-    this.manifestPath = options.manifestPath
-    this.includeList = options.includeList
+    this.manifestPath = options.manifestPath;
+    this.includeList = options.includeList;
   }
 
   public apply(compiler: Compiler): void {
@@ -26,16 +25,16 @@ export default class EmitHtmlFile {
         compilation.hooks.afterProcessAssets.tap(
           'HtmlPlugin (EmitHtmlFile)',
           () => {
-            const htmlFields = this.includeList || {}
+            const htmlFields = this.includeList || {};
 
             for (const field of Object.entries(htmlFields)) {
-              const [feature, resource] = field
+              const [feature, resource] = field;
 
               if (resource) {
                 const html = path.join(
                   path.dirname(this.manifestPath),
-                  resource
-                )
+                  resource,
+                );
 
                 // Resources from the manifest lib can come as undefined.
                 if (html) {
@@ -43,23 +42,23 @@ export default class EmitHtmlFile {
                   // If the user updates the path, this script runs again
                   // and output the file accordingly.
                   if (!fs.existsSync(html)) {
-                    errors.entryNotFoundWarn(compilation, feature, html)
-                    return
+                    errors.entryNotFoundWarn(compilation, feature, html);
+                    return;
                   }
 
-                  const rawHtml = fs.readFileSync(html, 'utf8')
+                  const rawHtml = fs.readFileSync(html, 'utf8');
 
                   if (!shouldExclude(html, ['public/'])) {
-                    const rawSource = new sources.RawSource(rawHtml)
-                    const filepath = getFilePath(feature, '.html')
-                    compilation.emitAsset(filepath, rawSource)
+                    const rawSource = new sources.RawSource(rawHtml);
+                    const filepath = getFilePath(feature, '.html');
+                    compilation.emitAsset(filepath, rawSource);
                   }
                 }
               }
             }
-          }
-        )
-      }
-    )
+          },
+        );
+      },
+    );
   }
 }

@@ -1,9 +1,12 @@
-import path from 'path'
-import {type Manifest} from '../../../types'
-import getFilename from '../../../manifest/getFilename'
+import path from 'path';
+import { type Manifest } from '../../../types';
+import getFilename from '../../../manifest/getFilename';
 
-const getBasename = (filepath: string) => path.basename(filepath)
-export default function getAction(compiledEntries: Record<string, any>, publicFolder: string) {
+const getBasename = (filepath: string) => path.basename(filepath);
+export default function getAction(
+  compiledEntries: Record<string, any>,
+  publicFolder: string,
+) {
   return (
     manifest.action && {
       action: {
@@ -12,8 +15,8 @@ export default function getAction(compiledEntries: Record<string, any>, publicFo
           default_popup: getFilename(
             `action/default_popup.html`,
             manifest.action.default_popup as string,
-            exclude
-          )
+            exclude,
+          ),
         }),
 
         ...(manifest.action.default_icon && {
@@ -21,10 +24,10 @@ export default function getAction(compiledEntries: Record<string, any>, publicFo
             typeof manifest.action.default_icon === 'string'
               ? getFilename(
                   `action/${getBasename(
-                    manifest.action.default_icon as string
+                    manifest.action.default_icon as string,
                   )}`,
                   manifest.action.default_icon as string,
-                  exclude
+                  exclude,
                 )
               : Object.fromEntries(
                   Object.entries(manifest.action.default_icon as string).map(
@@ -34,14 +37,14 @@ export default function getAction(compiledEntries: Record<string, any>, publicFo
                         getFilename(
                           `action/${getBasename(icon)}`,
                           icon,
-                          exclude
-                        )
-                      ]
-                    }
-                  )
-                )
-        })
-      }
+                          exclude,
+                        ),
+                      ];
+                    },
+                  ),
+                ),
+        }),
+      },
     }
-  )
+  );
 }

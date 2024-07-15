@@ -1,4 +1,4 @@
-import {type Manifest} from '../../types'
+import { type Manifest } from '../../types';
 
 export default function sidebarAction(manifest: Manifest): string | undefined {
   if (
@@ -6,10 +6,10 @@ export default function sidebarAction(manifest: Manifest): string | undefined {
     !manifest.sidebar_action ||
     !manifest.sidebar_action.default_panel
   ) {
-    return undefined
+    return undefined;
   }
 
-  const sidebarPage: string = manifest.sidebar_action.default_panel
+  const sidebarPage: string = manifest.sidebar_action.default_panel;
 
-  return sidebarPage
+  return sidebarPage;
 }

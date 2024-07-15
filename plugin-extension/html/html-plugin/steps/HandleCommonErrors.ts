@@ -1,16 +1,16 @@
-import {type Compiler} from '@rspack/core'
+import { type Compiler } from '@rspack/core';
 
-import {type IncludeList, type InternalPluginInterface} from '../../../types'
+import { type IncludeList, type InternalPluginInterface } from '../../../types';
 
-import errors from '../helpers/errors'
+import errors from '../helpers/errors';
 
 export default class CommonErrorsPlugin {
-  public readonly manifestPath: string
-  public readonly includeList?: IncludeList
+  public readonly manifestPath: string;
+  public readonly includeList?: IncludeList;
 
   constructor(options: InternalPluginInterface) {
-    this.manifestPath = options.manifestPath
-    this.includeList = options.includeList
+    this.manifestPath = options.manifestPath;
+    this.includeList = options.includeList;
   }
 
   apply(compiler: Compiler) {
@@ -28,15 +28,15 @@ export default class CommonErrorsPlugin {
               const cantResolveError = errors.handleCantResolveError(
                 this.manifestPath,
                 this.includeList || {},
-                error
-              )
+                error,
+              );
               if (cantResolveError) {
-                compilation.errors[index] = cantResolveError
+                compilation.errors[index] = cantResolveError;
               }
-            })
-          }
-        )
-      }
-    )
+            });
+          },
+        );
+      },
+    );
   }
 }

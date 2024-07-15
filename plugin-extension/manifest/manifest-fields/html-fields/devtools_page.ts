@@ -1,11 +1,11 @@
-import {type Manifest} from '../../types'
+import { type Manifest } from '../../types';
 
 export default function devtools(manifest: Manifest): string | undefined {
   if (!manifest || !manifest.devtools_page) {
-    return undefined
+    return undefined;
   }
 
-  const devtoolsPage: string = manifest.devtools_page
+  const devtoolsPage: string = manifest.devtools_page;
 
-  return devtoolsPage
+  return devtoolsPage;
 }

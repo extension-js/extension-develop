@@ -1,7 +1,10 @@
-import {type Manifest} from '../../../types'
-import getFilename from '../../../manifest/getFilename'
+import { type Manifest } from '../../../types';
+import getFilename from '../../../manifest/getFilename';
 
-export default function sidePanel(compiledEntries: Record<string, any>, publicFolder: string) {
+export default function sidePanel(
+  compiledEntries: Record<string, any>,
+  publicFolder: string,
+) {
   return (
     manifest.side_panel && {
       side_panel: {
@@ -9,10 +12,10 @@ export default function sidePanel(compiledEntries: Record<string, any>, publicFo
           default_path: getFilename(
             'side_panel/default_path.html',
             manifest.side_panel.default_path as string,
-            exclude
-          )
-        })
-      }
+            exclude,
+          ),
+        }),
+      },
     }
-  )
+  );
 }

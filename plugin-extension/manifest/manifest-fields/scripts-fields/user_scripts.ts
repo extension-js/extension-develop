@@ -1,4 +1,4 @@
-import {type Manifest} from '../../types'
+import { type Manifest } from '../../types';
 
 export default function userScripts(manifest: Manifest): string | undefined {
   if (
@@ -6,10 +6,10 @@ export default function userScripts(manifest: Manifest): string | undefined {
     !manifest.user_scripts ||
     !manifest.user_scripts.api_script
   ) {
-    return undefined
+    return undefined;
   }
 
-  const userScript: string = manifest.user_scripts.api_script
+  const userScript: string = manifest.user_scripts.api_script;
 
-  return userScript
+  return userScript;
 }

@@ -1,7 +1,10 @@
-import {type Manifest} from '../../../types'
-import getFilename from '../../../manifest/getFilename'
+import { type Manifest } from '../../../types';
+import getFilename from '../../../manifest/getFilename';
 
-export default function storage(compiledEntries: Record<string, any>, publicFolder: string) {
+export default function storage(
+  compiledEntries: Record<string, any>,
+  publicFolder: string,
+) {
   return (
     manifest.storage && {
       storage: {
@@ -9,10 +12,10 @@ export default function storage(compiledEntries: Record<string, any>, publicFold
           managed_schema: getFilename(
             'storage/managed_schema.json',
             manifest.storage.managed_schema,
-            exclude
-          )
-        })
-      }
+            exclude,
+          ),
+        }),
+      },
     }
-  )
+  );
 }

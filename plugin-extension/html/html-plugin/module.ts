@@ -1,17 +1,17 @@
-import path from 'path'
-import {type Compiler} from '@rspack/core'
+import path from 'path';
+import { type Compiler } from '@rspack/core';
 
-import {type HtmlIncludeList} from './types'
-import {type IncludeList, type InternalPluginInterface} from '../../types'
-import EmitHtmlFile from './steps/EmitHtmlFile'
-import AddAssetsToCompilation from './steps/AddAssetsToCompilation'
-import AddScriptsAndStylesToCompilation from './steps/AddScriptsAndStylesToCompilation'
-import UpdateHtmlFile from './steps/UpdateHtmlFile'
-import EnsureHMRForScripts from './steps/EnsureHMRForScripts'
-import AddToFileDependencies from './steps/AddToFileDependencies'
-import ThrowIfRecompileIsNeeded from './steps/ThrowIfRecompileIsNeeded'
-import HandleCommonErrors from './steps/HandleCommonErrors'
-import getAssetsFromHtml from './lib/getAssetsFromHtml'
+import { type HtmlIncludeList } from './types';
+import { type IncludeList, type InternalPluginInterface } from '../../types';
+import EmitHtmlFile from './steps/EmitHtmlFile';
+import AddAssetsToCompilation from './steps/AddAssetsToCompilation';
+import AddScriptsAndStylesToCompilation from './steps/AddScriptsAndStylesToCompilation';
+import UpdateHtmlFile from './steps/UpdateHtmlFile';
+import EnsureHMRForScripts from './steps/EnsureHMRForScripts';
+import AddToFileDependencies from './steps/AddToFileDependencies';
+import ThrowIfRecompileIsNeeded from './steps/ThrowIfRecompileIsNeeded';
+import HandleCommonErrors from './steps/HandleCommonErrors';
+import getAssetsFromHtml from './lib/getAssetsFromHtml';
 
 /**
  * HtmlPlugin is responsible for handling the HTML file
@@ -41,12 +41,12 @@ import getAssetsFromHtml from './lib/getAssetsFromHtml'
  * sidebar_action.default_panel - HMR enabled
  */
 export default class HtmlPlugin {
-  public readonly manifestPath: string
-  public readonly includeList?: IncludeList
+  public readonly manifestPath: string;
+  public readonly includeList?: IncludeList;
 
   constructor(options: InternalPluginInterface) {
-    this.manifestPath = options.manifestPath
-    this.includeList = options.includeList
+    this.manifestPath = options.manifestPath;
+    this.includeList = options.includeList;
   }
 
   public apply(compiler: Compiler): void {
@@ -54,27 +54,27 @@ export default class HtmlPlugin {
     new EmitHtmlFile({
       manifestPath: this.manifestPath,
       includeList: this.includeList,
-    }).apply(compiler)
+    }).apply(compiler);
 
     // 2 - Adds the assets within the HTML file to the compilation,
     // such as <img>, <iframe>, <link>, <script> etc.
     new AddAssetsToCompilation({
       manifestPath: this.manifestPath,
       includeList: this.includeList,
-    }).apply(compiler)
+    }).apply(compiler);
 
     // 3 - Adds the scripts and stylesheets within the HTML file
     // to the compilation.
     new AddScriptsAndStylesToCompilation({
       manifestPath: this.manifestPath,
       includeList: this.includeList,
-    }).apply(compiler)
+    }).apply(compiler);
 
     // 4 - Updates the HTML file with the new assets and entrypoints.
     new UpdateHtmlFile({
       manifestPath: this.manifestPath,
       includeList: this.includeList,
-    }).apply(compiler)
+    }).apply(compiler);
 
     // // 5 - Ensure scripts within the HTML file are HMR enabled.
     // new EnsureHMRForScripts({
@@ -86,7 +86,7 @@ export default class HtmlPlugin {
     new AddToFileDependencies({
       manifestPath: this.manifestPath,
       includeList: this.includeList,
-    }).apply(compiler)
+    }).apply(compiler);
 
     // 7 - Suggest user to recompile if any style
     // or script path within the HTML file has changed.
@@ -95,12 +95,12 @@ export default class HtmlPlugin {
     new ThrowIfRecompileIsNeeded({
       manifestPath: this.manifestPath,
       includeList: this.includeList,
-    }).apply(compiler)
+    }).apply(compiler);
 
     // 7 - Handle common errors.
     new HandleCommonErrors({
       manifestPath: this.manifestPath,
       includeList: this.includeList,
-    }).apply(compiler)
+    }).apply(compiler);
   }
 }

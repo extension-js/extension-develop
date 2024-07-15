@@ -1,13 +1,13 @@
-import action from './action'
-import browserAction from './browser_action'
-import browserActionThemeIcons from './browser_action.theme_icons'
-import icons from './icons'
-import pageAction from './page_action'
-import sidebarAction from './sidebar_action'
-import {type Manifest, type ThemeIcon} from '../../types'
+import action from './action';
+import browserAction from './browser_action';
+import browserActionThemeIcons from './browser_action.theme_icons';
+import icons from './icons';
+import pageAction from './page_action';
+import sidebarAction from './sidebar_action';
+import { type Manifest, type ThemeIcon } from '../../types';
 
 export default function getIconsFields(
-  manifest: Manifest
+  manifest: Manifest,
 ): Record<string, string | string[] | ThemeIcon[] | undefined> {
   return {
     action: action(manifest),
@@ -15,6 +15,6 @@ export default function getIconsFields(
     'browser_action/theme_icons': browserActionThemeIcons(manifest),
     icons: icons(manifest),
     page_action: pageAction(manifest),
-    sidebar_action: sidebarAction(manifest)
-  }
+    sidebar_action: sidebarAction(manifest),
+  };
 }

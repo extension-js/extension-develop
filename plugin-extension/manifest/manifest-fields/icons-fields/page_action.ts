@@ -1,29 +1,29 @@
-import {type Manifest} from '../../types'
+import { type Manifest } from '../../types';
 
 export default function pageAction(
-  manifest: Manifest
+  manifest: Manifest,
 ): string | string[] | undefined {
   if (
     !manifest ||
     !manifest.page_action ||
     !manifest.page_action.default_icon
   ) {
-    return undefined
+    return undefined;
   }
 
   if (typeof manifest.page_action.default_icon === 'string') {
-    return manifest.page_action.default_icon as string
+    return manifest.page_action.default_icon as string;
   }
 
-  const pageActionDefaultIcons: string[] = []
+  const pageActionDefaultIcons: string[] = [];
 
   for (const icon in manifest.page_action.default_icon) {
     const pageactionDefaultIconAbsolutePath = manifest.page_action.default_icon[
       icon
-    ] as string
+    ] as string;
 
-    pageActionDefaultIcons.push(pageactionDefaultIconAbsolutePath)
+    pageActionDefaultIcons.push(pageactionDefaultIconAbsolutePath);
   }
 
-  return pageActionDefaultIcons
+  return pageActionDefaultIcons;
 }

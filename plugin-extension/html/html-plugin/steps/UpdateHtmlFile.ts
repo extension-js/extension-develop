@@ -1,20 +1,20 @@
-import {type Compiler} from '@rspack/core'
-import {sources, Compilation} from '@rspack/core'
+import { type Compiler } from '@rspack/core';
+import { sources, Compilation } from '@rspack/core';
 
-import {type IncludeList, type InternalPluginInterface} from '../../../types'
+import { type IncludeList, type InternalPluginInterface } from '../../../types';
 
-import patchHtml from '../lib/patchHtml'
-import {shouldExclude} from '../helpers/utils'
-import getFilePath from '../helpers/getFilePath'
-import getAssetsFromHtml from '../lib/getAssetsFromHtml'
+import patchHtml from '../lib/patchHtml';
+import { shouldExclude } from '../helpers/utils';
+import getFilePath from '../helpers/getFilePath';
+import getAssetsFromHtml from '../lib/getAssetsFromHtml';
 
 export default class UpdateHtmlFile {
-  public readonly manifestPath: string
-  public readonly includeList?: IncludeList
+  public readonly manifestPath: string;
+  public readonly includeList?: IncludeList;
 
   constructor(options: InternalPluginInterface) {
-    this.manifestPath = options.manifestPath
-    this.includeList = options.includeList
+    this.manifestPath = options.manifestPath;
+    this.includeList = options.includeList;
   }
 
   public apply(compiler: Compiler): void {
@@ -25,16 +25,16 @@ export default class UpdateHtmlFile {
           {
             name: 'HtmlPlugin (UpdateHtmlFile)',
             // Summarize the list of existing assets.
-            stage: Compilation.PROCESS_ASSETS_STAGE_DERIVED
+            stage: Compilation.PROCESS_ASSETS_STAGE_DERIVED,
           },
           () => {
-            if (compilation.errors.length > 0) return
+            if (compilation.errors.length > 0) return;
 
-            const htmlEntries = this.includeList || {}
+            const htmlEntries = this.includeList || {};
 
             for (const field of Object.entries(htmlEntries)) {
-              const [feature, resource] = field
-              const html = resource
+              const [feature, resource] = field;
+              const html = resource;
 
               // Resources from the manifest lib can come as undefined.
               if (html) {
@@ -42,19 +42,19 @@ export default class UpdateHtmlFile {
                   compilation,
                   feature,
                   html,
-                  htmlEntries
-                )
+                  htmlEntries,
+                );
 
                 if (!shouldExclude(html, ['public/'])) {
-                  const rawSource = new sources.RawSource(updatedHtml)
-                  const filepath = getFilePath(feature, '.html')
-                  compilation.updateAsset(filepath, rawSource)
+                  const rawSource = new sources.RawSource(updatedHtml);
+                  const filepath = getFilePath(feature, '.html');
+                  compilation.updateAsset(filepath, rawSource);
                 }
               }
             }
-          }
-        )
-      }
-    )
+          },
+        );
+      },
+    );
   }
 }

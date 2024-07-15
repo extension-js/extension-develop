@@ -1,4 +1,4 @@
-import {type Manifest} from '../../types'
+import { type Manifest } from '../../types';
 
 export default function sidebarAction(manifest: Manifest): string | undefined {
   if (
@@ -6,11 +6,11 @@ export default function sidebarAction(manifest: Manifest): string | undefined {
     !manifest.sidebar_action ||
     !manifest.sidebar_action.default_icon
   ) {
-    return undefined
+    return undefined;
   }
 
   const sidebarActionDefaultIcon = manifest.sidebar_action
-    .default_icon as string
+    .default_icon as string;
 
-  return sidebarActionDefaultIcon
+  return sidebarActionDefaultIcon;
 }

@@ -1,5 +1,5 @@
-import extensionJsLogo from '../images/extension.png'
-import './styles.css'
+import extensionJsLogo from '../images/extension.png';
+import './styles.css';
 
 document.body.innerHTML += `
 <div class="content_script-box">
@@ -18,13 +18,14 @@ document.body.innerHTML += `
     </a>
   </p>
 </div>
-`
+`;
 
 document.getElementById('colorPicker').addEventListener('input', (event) => {
+  // eslint-disable-next-line no-undef
   chrome.runtime
     .sendMessage({
       action: 'changeBackgroundColor',
-      color: event.target.value
+      color: event.target.value,
     })
-    .catch(console.error)
-})
+    .catch(console.error);
+});

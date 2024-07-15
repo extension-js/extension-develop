@@ -1,4 +1,4 @@
-import {type Manifest} from '../../types'
+import { type Manifest } from '../../types';
 
 export default function pageAction(manifest: Manifest): string | undefined {
   if (
@@ -6,10 +6,10 @@ export default function pageAction(manifest: Manifest): string | undefined {
     !manifest.page_action ||
     !manifest.page_action.default_popup
   ) {
-    return undefined
+    return undefined;
   }
 
-  const pageActionPage: string = manifest.page_action.default_popup
+  const pageActionPage: string = manifest.page_action.default_popup;
 
-  return pageActionPage
+  return pageActionPage;
 }

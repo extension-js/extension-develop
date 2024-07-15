@@ -16,7 +16,9 @@ h1 {
   border-color: #ccc;
   border-radius: 24px;
   filter: grayscale(1);
-  transition: filter 2s, border-color 2s;
+  transition:
+    filter 2s,
+    border-color 2s;
 }
 
 .new:hover {

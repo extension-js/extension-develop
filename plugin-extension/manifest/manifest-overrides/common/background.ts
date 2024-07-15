@@ -1,20 +1,22 @@
-import {Manifest} from '../../../types'
+import { Manifest } from '../../../types';
 
 export function backgroundPage(
   manifest: Manifest,
-  compiledEntries: Record<string, any>, publicFolder: string) {
+  compiledEntries: Record<string, any>,
+  publicFolder: string,
+) {
   if (!compiledEntries['background/page']) {
-    return undefined
+    return undefined;
   }
 
   if (compiledEntries['background/page']?.includes(publicFolder)) {
-    return undefined
+    return undefined;
   }
 
   return {
     background: {
       ...manifest.background,
-      page: compiledEntries['background/page']
-    }
-  }
+      page: compiledEntries['background/page'],
+    },
+  };
 }

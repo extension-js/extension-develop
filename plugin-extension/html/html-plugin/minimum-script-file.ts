@@ -5,5 +5,5 @@
 // @ts-ignore
 if (import.meta.webpackHot) {
   // @ts-ignore
-  import.meta.webpackHot.accept()
+  import.meta.webpackHot.accept();
 }

@@ -1,11 +1,11 @@
-import {type Manifest} from '../../types'
+import { type Manifest } from '../../types';
 
 export default function storage(manifest: Manifest): string | undefined {
   if (!manifest || !manifest.storage || !manifest.storage.managed_schema) {
-    return undefined
+    return undefined;
   }
 
-  const storageManagedSchema: string = manifest.storage.managed_schema
+  const storageManagedSchema: string = manifest.storage.managed_schema;
 
-  return storageManagedSchema
+  return storageManagedSchema;
 }

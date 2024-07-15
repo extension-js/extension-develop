@@ -1,7 +1,10 @@
-import {type Manifest} from '../../../types'
-import getFilename from '../../../manifest/getFilename'
+import { type Manifest } from '../../../types';
+import getFilename from '../../../manifest/getFilename';
 
-export default function userScripts(compiledEntries: Record<string, any>, publicFolder: string) {
+export default function userScripts(
+  compiledEntries: Record<string, any>,
+  publicFolder: string,
+) {
   return (
     manifest.user_scripts && {
       user_scripts: {
@@ -11,10 +14,10 @@ export default function userScripts(compiledEntries: Record<string, any>, public
           api_script: getFilename(
             'user_scripts/api_script.js',
             manifest.user_scripts.api_script as string,
-            exclude
-          )
-        })
-      }
+            exclude,
+          ),
+        }),
+      },
     }
-  )
+  );
 }

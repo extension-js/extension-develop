@@ -1,15 +1,15 @@
-import path from 'path'
-import {type Compiler} from '@rspack/core'
+import path from 'path';
+import { type Compiler } from '@rspack/core';
 
-import {type IncludeList, type InternalPluginInterface} from '../../../types'
+import { type IncludeList, type InternalPluginInterface } from '../../../types';
 
 export default class EnsureHMRForScripts {
-  public readonly manifestPath: string
-  public readonly includeList?: IncludeList
+  public readonly manifestPath: string;
+  public readonly includeList?: IncludeList;
 
   constructor(options: InternalPluginInterface) {
-    this.manifestPath = options.manifestPath
-    this.includeList = options.includeList
+    this.manifestPath = options.manifestPath;
+    this.includeList = options.includeList;
   }
 
   public apply(compiler: Compiler): void {
@@ -21,10 +21,10 @@ export default class EnsureHMRForScripts {
           options: {
             manifestPath: this.manifestPath,
             exclude: ['public/'],
-            includeList: this.includeList
-          }
-        }
-      ]
-    })
+            includeList: this.includeList,
+          },
+        },
+      ],
+    });
   }
 }

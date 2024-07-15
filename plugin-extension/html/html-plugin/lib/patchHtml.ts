@@ -1,13 +1,13 @@
-import fs from 'fs'
-import path from 'path'
-import {type Compilation} from '@rspack/core'
+import fs from 'fs';
+import path from 'path';
+import { type Compilation } from '@rspack/core';
 // @ts-ignore
-import parse5utils from 'parse5-utils'
+import parse5utils from 'parse5-utils';
 
-import parseHtml from './parseHtml'
-import * as fileUtils from '../helpers/utils'
-import getFilePath from '../helpers/getFilePath'
-import {type IncludeList} from '../../../types'
+import parseHtml from './parseHtml';
+import * as fileUtils from '../helpers/utils';
+import getFilePath from '../helpers/getFilePath';
+import { type IncludeList } from '../../../types';
 
 export default function patchHtml(
   compilation: Compilation,
@@ -15,16 +15,16 @@ export default function patchHtml(
   htmlEntry: string,
   includeList: IncludeList,
 ) {
-  const htmlFile = fs.readFileSync(htmlEntry, {encoding: 'utf8'})
-  const htmlDocument = parse5utils.parse(htmlFile)
+  const htmlFile = fs.readFileSync(htmlEntry, { encoding: 'utf8' });
+  const htmlDocument = parse5utils.parse(htmlFile);
 
   // Ensure that not only we cover files imported by the HTML file
   // but also by the JS files imported by the HTML file.
-  let hasCssEntry = !!compilation.getAsset(feature + '.css')
-  let hasJsEntry = false
+  let hasCssEntry = !!compilation.getAsset(feature + '.css');
+  let hasJsEntry = false;
 
   for (let node of htmlDocument.childNodes) {
-    if (node.nodeName !== 'html') continue
+    if (node.nodeName !== 'html') continue;
 
     for (const htmlChildNode of node.childNodes) {
       // We don't really care whether the asset is in the head or body
@@ -33,21 +33,21 @@ export default function patchHtml(
         htmlChildNode.nodeName === 'head' ||
         htmlChildNode.nodeName === 'body'
       ) {
-        parseHtml(htmlChildNode, ({filePath, childNode, assetType}) => {
-          const htmlDir = path.dirname(htmlEntry)
-          const absolutePath = path.resolve(htmlDir, filePath)
-          const extname = fileUtils.getExtname(absolutePath)
+        parseHtml(htmlChildNode, ({ filePath, childNode, assetType }) => {
+          const htmlDir = path.dirname(htmlEntry);
+          const absolutePath = path.resolve(htmlDir, filePath);
+          const extname = fileUtils.getExtname(absolutePath);
           // public/ and script/ paths are excluded from the compilation.
           const isExcludedPath = fileUtils.shouldExclude(
             path.resolve(htmlDir, filePath),
-            ['public/']
-          )
-          const excludedFilePath = path.join('/', path.normalize(filePath))
+            ['public/'],
+          );
+          const excludedFilePath = path.join('/', path.normalize(filePath));
           // Check if the file is in the compilation entry map.
           const includeListEntry = fileUtils.isFromIncludeList(
             absolutePath,
-            includeList
-          )
+            includeList,
+          );
 
           switch (assetType) {
             // For script types, we have two cases:
@@ -61,26 +61,26 @@ export default function patchHtml(
                 node = parse5utils.setAttribute(
                   childNode,
                   'src',
-                  excludedFilePath
-                )
+                  excludedFilePath,
+                );
               } else {
-                node = parse5utils.remove(childNode)
-                hasJsEntry = true
+                node = parse5utils.remove(childNode);
+                hasJsEntry = true;
               }
-              break
+              break;
             } // For CSS types, we have the same cases of script types.
             case 'css': {
               if (isExcludedPath) {
                 node = parse5utils.setAttribute(
                   childNode,
                   'href',
-                  excludedFilePath
-                )
+                  excludedFilePath,
+                );
               } else {
-                node = parse5utils.remove(childNode)
-                hasCssEntry = true
+                node = parse5utils.remove(childNode);
+                hasCssEntry = true;
               }
-              break
+              break;
             }
             // For static assets, we have three cases:
             // 1. If the file is excluded, we replace the src or href attribute
@@ -98,26 +98,26 @@ export default function patchHtml(
                 node = parse5utils.setAttribute(
                   childNode,
                   assetType === 'staticSrc' ? 'src' : 'href',
-                  excludedFilePath
-                )
+                  excludedFilePath,
+                );
                 // Path is in the include list. Resolve to entry name.
               } else if (includeListEntry) {
                 const filepath = fileUtils.getIncludeEntry(
                   includeList,
                   absolutePath,
-                  extname
-                )
+                  extname,
+                );
                 node = parse5utils.setAttribute(
                   childNode,
                   assetType === 'staticSrc' ? 'src' : 'href',
-                  filepath
-                )
+                  filepath,
+                );
                 // Path is not in the compilation entry map. Resolve to assets folder.
               } else {
                 const filepath = path.join(
                   'assets',
-                  path.basename(absolutePath, extname)
-                )
+                  path.basename(absolutePath, extname),
+                );
                 // There will be cases where users can add
                 // a # to a link href, in which case we would try to parse.
                 // This ensures we only parse the file path if its valid.
@@ -125,16 +125,16 @@ export default function patchHtml(
                   node = parse5utils.setAttribute(
                     childNode,
                     assetType === 'staticSrc' ? 'src' : 'href',
-                    getFilePath(filepath, '', true)
-                  )
+                    getFilePath(filepath, '', true),
+                  );
                 }
               }
-              break
+              break;
             }
             default:
-              break
+              break;
           }
-        })
+        });
       }
 
       if (htmlChildNode.nodeName === 'head') {
@@ -148,13 +148,13 @@ export default function patchHtml(
           // In production mode we use MiniCssExtractPlugin to extract the CSS
           // into a separate file.
           if (compilation.options.mode === 'production') {
-            const linkTag = parse5utils.createNode('link')
+            const linkTag = parse5utils.createNode('link');
             linkTag.attrs = [
-              {name: 'rel', value: 'stylesheet'},
-              {name: 'href', value: getFilePath(feature, '.css', true)}
-            ]
+              { name: 'rel', value: 'stylesheet' },
+              { name: 'href', value: getFilePath(feature, '.css', true) },
+            ];
 
-            parse5utils.append(htmlChildNode, linkTag)
+            parse5utils.append(htmlChildNode, linkTag);
           }
         }
       }
@@ -165,16 +165,16 @@ export default function patchHtml(
         // during development, so we only add the script tag if the
         // user has not already added one.
         if (hasJsEntry || compilation.options.mode !== 'production') {
-          const scriptTag = parse5utils.createNode('script')
+          const scriptTag = parse5utils.createNode('script');
           scriptTag.attrs = [
-            {name: 'src', value: getFilePath(feature, '.js', true)}
-          ]
+            { name: 'src', value: getFilePath(feature, '.js', true) },
+          ];
 
-          parse5utils.append(htmlChildNode, scriptTag)
+          parse5utils.append(htmlChildNode, scriptTag);
         }
       }
     }
 
-    return parse5utils.serialize(htmlDocument)
+    return parse5utils.serialize(htmlDocument);
   }
 }

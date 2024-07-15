@@ -1,6 +1,6 @@
-import path from 'path'
-import { RsbuildPlugin } from '@rsbuild/core'
-import { PluginInterface } from '../types'
+import path from 'path';
+import { RsbuildPlugin } from '@rsbuild/core';
+import { PluginInterface } from '../types';
 import {
   scanPublicFilesInFolder,
   scanHtmlFilesInFolder,
@@ -8,8 +8,8 @@ import {
   generatePublicEntries,
   generatePagesEntries,
   generateScriptsEntries,
-} from './generate-entries'
-import {warnUponFolderChanges} from './warn-upon-folder-changes'
+} from './generate-entries';
+import { warnUponFolderChanges } from './warn-upon-folder-changes';
 
 /**
  * SpecialFoldersPlugin is responsible for handling the
@@ -24,38 +24,37 @@ export const specialFolders = ({
 }: PluginInterface): RsbuildPlugin => ({
   name: 'plugin-extension:special-folders',
   setup: (api) => {
-    const projectPath = path.dirname(manifestPath)
+    const projectPath = path.dirname(manifestPath);
 
     // All Extension special folders
     // public/ - static assets. Copy/paste all files to the output folder
-    const publicFolder = path.join(projectPath, 'public')
+    const publicFolder = path.join(projectPath, 'public');
     // pages/ - Add every .html file inside pages/ to the compilation
-    const pagesFolder = path.join(projectPath, 'pages')
+    const pagesFolder = path.join(projectPath, 'pages');
     // scripts/ - Add every .js-like (see webpack module extensions)
     // file inside sxripts/ to the compilation
-    const scriptsFolder = path.join(projectPath, 'scripts')
+    const scriptsFolder = path.join(projectPath, 'scripts');
 
     // All files in each special folder
-    const allPublic = scanPublicFilesInFolder(publicFolder)
-    const allPages = scanHtmlFilesInFolder(pagesFolder)
-    const allScripts = scanScriptFilesInFolder(projectPath, scriptsFolder)
+    const allPublic = scanPublicFilesInFolder(publicFolder);
+    const allPages = scanHtmlFilesInFolder(pagesFolder);
+    const allScripts = scanScriptFilesInFolder(projectPath, scriptsFolder);
 
     // resolve-plugin expects a key-value pair of all files
-    const publicList = generatePublicEntries(projectPath, allPublic)
-    const pagesList = generatePagesEntries(allPages)
-    const scriptsList = generateScriptsEntries(allScripts)
-    
+    const publicList = generatePublicEntries(projectPath, allPublic);
+    const pagesList = generatePagesEntries(allPages);
+    const scriptsList = generateScriptsEntries(allScripts);
+
     api.expose('special-folders', () => ({
       public: publicList,
       pages: pagesList,
-      scripts: scriptsList
+      scripts: scriptsList,
     }));
 
     if (process.env.NODE_ENV === 'development') {
       if (api.getRsbuildConfig().dev?.watchFiles) {
-        warnUponFolderChanges({manifestPath}).setup(api)
+        warnUponFolderChanges({ manifestPath }).setup(api);
       }
     }
-  }
-})
-
+  },
+});

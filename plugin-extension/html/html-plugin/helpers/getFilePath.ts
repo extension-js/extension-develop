@@ -1,7 +1,9 @@
 export default function getFilePath(
   outputname: string,
   extension: string,
-  isAbsolute?: boolean
+  isAbsolute?: boolean,
 ) {
-  return isAbsolute ? `/${outputname}${extension}` : `${outputname}${extension}`
+  return isAbsolute
+    ? `/${outputname}${extension}`
+    : `${outputname}${extension}`;
 }

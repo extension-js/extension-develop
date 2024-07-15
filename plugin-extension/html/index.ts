@@ -1,7 +1,7 @@
-import {type RsbuildPlugin} from '@rsbuild/core'
+import { type RsbuildPlugin } from '@rsbuild/core';
 
-import {type PluginInterface} from '../types'
-import HtmlPlugin from './html-plugin/module'
+import { type PluginInterface } from '../types';
+import HtmlPlugin from './html-plugin/module';
 
 /**
  * HtmlPlugin is responsible for handling the HTML file
@@ -30,20 +30,18 @@ import HtmlPlugin from './html-plugin/module'
  * side_panel.default_panel - HMR enabled
  * sidebar_action.default_panel - HMR enabled
  */
-export const html = ({
-  manifestPath,
-}: PluginInterface): RsbuildPlugin => ({
+export const html = ({ manifestPath }: PluginInterface): RsbuildPlugin => ({
   name: 'extension-develop:html',
   setup: (api) => {
-    const manifestHtml = api.useExposed('manifest-fields')().html
-    const nonManifestHtml = api.useExposed('special-folders')().pages
+    const manifestHtml = api.useExposed('manifest-fields')().html;
+    const nonManifestHtml = api.useExposed('special-folders')().pages;
 
     const htmlFields: Record<string, any> = {
       ...manifestHtml,
-      ...nonManifestHtml
-    }
+      ...nonManifestHtml,
+    };
 
-    api.modifyRsbuildConfig((config, {mergeRsbuildConfig}) => {      
+    api.modifyRsbuildConfig((config, { mergeRsbuildConfig }) => {
       return mergeRsbuildConfig(config, {
         tools: {
           // htmlPlugin: true,
@@ -52,11 +50,11 @@ export const html = ({
               new HtmlPlugin({
                 manifestPath,
                 includeList: htmlFields,
-              })
-            ]
-          }
-        }
+              }),
+            ],
+          },
+        },
       });
     });
-  }
-})
+  },
+});
