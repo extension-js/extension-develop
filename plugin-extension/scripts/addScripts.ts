@@ -1,3 +1,4 @@
+import path from 'path'
 import {type RsbuildPlugin} from '@rsbuild/core'
 
 import {type InternalPluginInterface} from '../types'
@@ -16,16 +17,20 @@ export const addScripts = ({
 
       const scriptImports = getScriptEntries(manifestPath, scriptPath)
       const cssImports = getCssEntries(manifestPath, scriptPath)
-      const entryImports = [...cssImports, ...scriptImports]
+
+      const entryImports = [
+        ...cssImports.map((css) => path.join(path.dirname(manifestPath), css)),
+        ...scriptImports.map((js) => path.join(path.dirname(manifestPath), js))
+      ]
 
       // During development, we extract the content_scripts css files from
       // content_scripts and inject them as dynamic imports
       // so we can benefit from HMR.
       // In production we don't need that, so we add the files to the entry points
       // along with other content_script files.
-      if (process.env.NODE_ENV === 'production') {
-        entryImports.push(...cssImports)
-      }
+      // if (process.env.NODE_ENV === 'production') {
+      //   entryImports.push(...cssImports)
+      // }
 
       if (cssImports.length || scriptImports.length) {
         scriptEntries = {

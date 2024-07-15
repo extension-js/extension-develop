@@ -33,11 +33,11 @@ export function getScriptEntries(
       // File exists
       fs.existsSync(asset) &&
       // Not in some public/ folder
-      asset.includes('public/')
+      !asset.includes('public/')
 
     const assetExtension = path.extname(asset)
 
-    return validFile && scriptPath?.includes(assetExtension)
+    return validFile && scriptAsset?.includes(assetExtension)
   })
 
   return fileAssets
@@ -62,7 +62,7 @@ export function getCssEntries(
       // File exists
       fs.existsSync(asset) &&
       // Not in some public/ folder
-      asset.includes('public/')
+      !asset.includes('public/')
 
     return (
       (validFile && asset.endsWith('.css')) ||

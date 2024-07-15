@@ -2,6 +2,13 @@ import {type RsbuildPlugin} from '@rsbuild/core'
 
 import {type PluginInterface} from '../types'
 
+import {emitManifest} from './emitManifest'
+import {manifestFields} from './manifest-fields'
+import {checkManifestFiles} from './check-manifest-files'
+import {updateManifest} from './updateManifest'
+// import {addDependencies} from './addDependencies'
+// import {throwIfRecompileIsNeeded} from './throwIfRecompileIsNeeded'
+
 /**
  * ManifestPlugin is responsible for handling the manifest.json file.
  * It ensures that the files defined in the manifest have valid paths,
@@ -16,41 +23,34 @@ export const manifest = ({
   manifestPath,
 }: PluginInterface): RsbuildPlugin => ({
   name: 'plugin-extension:manifest',
-  setup: async (api) => {
-    const manifest = api.useExposed('manifest-json')()
-
+  setup: (api) => {
     // 1 - Emit the manifest to the assets bundle.
     // It doesn't change the manifest, it just ensures
     // it's emitted to the assets bundle so other plugins
     // can modify it.
-    // new EmitManifestPlugin({
-    //   manifestPath: this.manifestPath
-    // }).apply(compiler)
+    emitManifest({manifestPath}).setup(api)
 
-    // 2 - Ensure the files defined in the manifest have valid paths,
+    // 2 - With the manifest file, expose its fields
+    // so other plugins can consume its data without
+    // requiring the manifest file every time.
+    manifestFields().setup(api)
+
+    // 3 - Ensure the files defined in the manifest have valid paths,
     // throwing errors if they don't.
-    // new CheckManifestFilesPlugin({
-    //   manifestPath: this.manifestPath
-    // }).apply(compiler)
+    checkManifestFiles({ manifestPath }).setup(api)
 
-    // 3 - This is the end result of the manifest plugin, it updates the
+    // 4 - This is the end result of the manifest plugin, it updates the
     // manifest with the output path of relevant files.
-    // new UpdateManifestPlugin({
-    //   manifestPath: this.manifestPath,
-    //   exclude: this.exclude
-    // }).apply(compiler)
+    updateManifest({ manifestPath }).setup(api)
 
-    // 4 - Ensure this manifest is stored as file dependency
+    // 5 - Ensure this manifest is stored as file dependency
     // so webpack can watch and trigger changes.
-    // new AddDependenciesPlugin([this.manifestPath]).apply(compiler)
+    // addDependencies([manifestPath]).setup(api)
 
-    // 5 - Some files in manifest are used as entrypoints. Since
+    // 6 - Some files in manifest are used as entrypoints. Since
     // we can't recompile entrypoints at runtime, we need to
     // throw an error if any of those files change.
-    // new ThrowIfRecompileIsNeeded({
-    //   manifestPath: this.manifestPath,
-    //   exclude: this.exclude
-    // }).apply(compiler)
+    // throwIfRecompileIsNeeded({ manifestPath }).setup(api)
   }
 })
 

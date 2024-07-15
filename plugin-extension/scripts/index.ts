@@ -12,9 +12,6 @@ export const scripts = ({
     const manifestsScripts = api.useExposed('manifest-fields')()
     const nonManifestScripts = api.useExposed('special-folders')().scripts
 
-    console.log({
-      manifestsScripts,
-    })
     const scriptFields: Record<string, any> = {
       ...manifestsScripts,
       ...nonManifestScripts

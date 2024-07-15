@@ -21,11 +21,12 @@ import {warnUponFolderChanges} from './warn-upon-folder-changes'
  * - /public - Static files not included in the manifest
  */
 export const specialFolders = ({
-  manifestPath = '',
-}: Partial<PluginInterface> = {}): RsbuildPlugin => ({
+  manifestPath,
+}: PluginInterface): RsbuildPlugin => ({
   name: 'plugin-extension:special-folders',
   setup: (api) => {
-    const projectPath = process.env.EXTENSION_PROJECT_PATH || ''
+    const projectPath = path.dirname(manifestPath)
+
     // All Extension special folders
     // public/ - static assets. Copy/paste all files to the output folder
     const publicFolder = path.join(projectPath, 'public')
@@ -51,6 +52,7 @@ export const specialFolders = ({
       scripts: scriptsList
     }));
 
+    // TODO: cezaraugusto rsbuild has built-in support for public folder
     copyPublicFolder({manifestPath}).setup(api)
 
     if (process.env.NODE_ENV === 'development') {

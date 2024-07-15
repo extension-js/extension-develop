@@ -1,12 +1,11 @@
 import {type RsbuildPlugin, type RsbuildPluginAPI} from '@rsbuild/core'
-import {type PluginInterface} from '../types'
 import htmlFromManifest from './html-fields'
 import iconFromManifest from './icons-fields'
 import jsonFromManifest from './json-fields'
 // import localesFromManifest from './locales-fields'
 import scriptsFromManifest from './scripts-fields'
 import webResourcesFromManifest from './web-resources-fields'
-import {type Manifest} from '../types'
+import {type Manifest} from '../../types'
 
 // TODO: cezaraugusto type this
 export interface ManifestFields {

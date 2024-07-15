@@ -20,22 +20,41 @@ const sharedConfig = defineConfig({
   dev: {
     writeToDisk: true,
   },
-  html: {
-    outputStructure: 'nested',
-  },
+  // html: {},
   // tools: {},
   output: {
     manifest: true,
     distPath: {
       root: path.join(__dirname, projectPath, 'dist', TARGET_BROWSER),
+      html: '/',
+      js: '',
+      jsAsync: '',
+      css: '',
+      cssAsync: '',
+      svg: 'svg',
+      font: 'font',
+      wasm: 'wasm',
+      image: 'image',
+      media: 'media',
     }
   },
   source: {
     entry: {
-      'fake_manifest': `${projectPath}/manifest.json`
-    }
-  }
-  // server: {},
+      manifest: MANIFEST_PATH,
+    },
+  },
+  server: {
+    printUrls({ urls, port, protocol, routes }) {
+      // console.log(urls); // ['http://localhost:3000', 'http://192.168.0.1:3000']
+      // console.log(port); // 3000
+      // console.log(protocol); // 'http' or 'https'
+      // console.log(routes); // ['/', '/about', '/contact']
+    },
+    publicDir: {
+      name: 'public',
+      watch: true,
+    },
+  },
   // security: {},
   // performance: {},
   // moduleFederation: {},
