@@ -2,7 +2,8 @@ import path from 'path'
 import fs from 'fs'
 import {type Compiler} from '@rspack/core'
 
-import {type HtmlIncludeList, type InternalHtmlPluginInterface} from '../types'
+import {type IncludeList, type InternalPluginInterface} from '../../../types'
+
 
 // Manifest fields
 import manifestFields from 'browser-extension-manifest-fields'
@@ -12,33 +13,28 @@ import {shouldExclude} from '../helpers/utils'
 
 export default class AddScriptsAndStylesToCompilation {
   public readonly manifestPath: string
-  public readonly includeList: HtmlIncludeList
-  public readonly exclude: string[]
+  public readonly includeList?: IncludeList
 
-  constructor(options: InternalHtmlPluginInterface) {
+  constructor(options: InternalPluginInterface) {
     this.manifestPath = options.manifestPath
     this.includeList = options.includeList
-    this.exclude = options.exclude
   }
 
   public apply(compiler: Compiler): void {
-    const htmlEntries = {
-      ...manifestFields(this.manifestPath).html,
-      ...this.includeList
-    }
+    const htmlEntries = this.includeList || {}
 
     for (const field of Object.entries(htmlEntries)) {
       const [feature, resource] = field
 
       // Resources from the manifest lib can come as undefined.
-      if (resource?.html) {
-        if (!fs.existsSync(resource?.html)) return
+      if (resource) {
+        if (!fs.existsSync(resource)) return
 
-        const htmlAssets = getAssetsFromHtml(resource?.html)
+        const htmlAssets = getAssetsFromHtml(resource)
         const jsAssets = htmlAssets?.js || []
         const cssAssets = htmlAssets?.css || []
         const fileAssets = [...jsAssets, ...cssAssets].filter(
-          (asset) => !shouldExclude(asset, this.exclude)
+          (asset) => !shouldExclude(asset, ['public/'])
         )
 
         if (compiler.options.mode === 'development') {
@@ -51,8 +47,8 @@ export default class AddScriptsAndStylesToCompilation {
           fileAssets.push(hmrScript)
         }
 
-        if (fs.existsSync(resource?.html)) {
-          if (!shouldExclude(resource?.html, this.exclude)) {
+        if (fs.existsSync(resource)) {
+          if (!shouldExclude(resource, ['public/'])) {
             compiler.options.entry = {
               ...compiler.options.entry,
               // https://rspack.js.org/configuration/entry-context/#entry-descriptor

@@ -1,17 +1,15 @@
 import path from 'path'
 import {type Compiler} from '@rspack/core'
 
-import {type HtmlIncludeList, type InternalHtmlPluginInterface} from '../types'
+import {type IncludeList, type InternalPluginInterface} from '../../../types'
 
 export default class EnsureHMRForScripts {
   public readonly manifestPath: string
-  public readonly includeList: HtmlIncludeList
-  public readonly exclude: string[]
+  public readonly includeList?: IncludeList
 
-  constructor(options: InternalHtmlPluginInterface) {
+  constructor(options: InternalPluginInterface) {
     this.manifestPath = options.manifestPath
     this.includeList = options.includeList
-    this.exclude = options.exclude || []
   }
 
   public apply(compiler: Compiler): void {
@@ -22,7 +20,7 @@ export default class EnsureHMRForScripts {
           loader: path.resolve(__dirname, './loaders/InjectHmrAcceptLoader'),
           options: {
             manifestPath: this.manifestPath,
-            exclude: this.exclude,
+            exclude: ['public/'],
             includeList: this.includeList
           }
         }

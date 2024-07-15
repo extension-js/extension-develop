@@ -4,16 +4,32 @@ import {type PluginInterface} from '../types'
 import { addScripts } from './addScripts'
 import { addStyles } from './addStyles'
 
+/**
+ * ScriptsPlugin is responsible for handiling all possible JavaScript
+ * (and CSS, for content_scripts) fields in manifest.json. It also
+ * supports extra scripts defined via this.include option. These
+ * extra scripts are added to the compilation and are also HMR
+ * enabled. They are useful for adding extra scripts to the
+ * extension runtime, like content_scripts via `scripting`, for example.
+ *
+ * Features supported:
+ * - content_scripts.js - HMR enabled
+ * - content_scripts.css - HMR enabled
+ * - background.scripts - HMR enabled
+ * - service_worker - Reloaded by chrome.runtime.reload()
+ * - user_scripts.api_scripts - HMR enabled
+ * - scripts via this.include - HMR enabled
+ */
 export const scripts = ({
   manifestPath,
 }: PluginInterface): RsbuildPlugin => ({
   name: 'plugin-extension:scripts',
   setup: async (api) => {
-    const manifestsScripts = api.useExposed('manifest-fields')()
+    const manifestScripts = api.useExposed('manifest-fields')()
     const nonManifestScripts = api.useExposed('special-folders')().scripts
 
     const scriptFields: Record<string, any> = {
-      ...manifestsScripts,
+      ...manifestScripts,
       ...nonManifestScripts
     }
 

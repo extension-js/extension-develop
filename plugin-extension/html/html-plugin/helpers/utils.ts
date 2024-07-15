@@ -1,8 +1,8 @@
 import path from 'path'
 import fs from 'fs'
 import {type Compilation} from '@rspack/core'
-import {type HtmlIncludeList} from '../types'
-import {type Manifest} from '../../../types'
+import {type Manifest, type IncludeList} from '../../../types'
+import getAssetsFromHtml from '../lib/getAssetsFromHtml'
 
 function isUsingReact(projectDir: string) {
   const packageJsonPath = path.join(projectDir, 'package.json')
@@ -38,25 +38,26 @@ function getResolvedPath(context: string, filePath: string, basePath: string) {
 }
 
 function isFromIncludeList(
-  includeList: HtmlIncludeList,
-  filePath: string
+  filePath: string,
+  includeList?: IncludeList
 ): boolean {
-  return Object.values(includeList).some((value) => {
-    return value?.html === filePath
+  return Object.values(includeList || {}).some((value) => {
+    return value === filePath
   })
 }
 
 function getIncludeEntry(
-  includeList: HtmlIncludeList,
+  includeList: IncludeList,
   filePath: string,
   extension: string
 ): string {
   const entryname =
     Object.keys(includeList).find((key) => {
+      const includePath = includeList[key]
       return (
-        includeList[key]?.html === filePath ||
-        includeList[key]?.js.includes(filePath) ||
-        includeList[key]?.css.includes(filePath)
+        includeList[key] === filePath ||
+        getAssetsFromHtml(includePath)?.js?.includes(filePath) ||
+        getAssetsFromHtml(includePath)?.css?.includes(filePath)
       )
     }) || ''
 

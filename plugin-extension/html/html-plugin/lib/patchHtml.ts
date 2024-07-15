@@ -7,14 +7,13 @@ import parse5utils from 'parse5-utils'
 import parseHtml from './parseHtml'
 import * as fileUtils from '../helpers/utils'
 import getFilePath from '../helpers/getFilePath'
-import {type HtmlIncludeList} from '../types'
+import {type IncludeList} from '../../../types'
 
 export default function patchHtml(
   compilation: Compilation,
   feature: string,
   htmlEntry: string,
-  includeList: HtmlIncludeList,
-  exclude: string[]
+  includeList: IncludeList,
 ) {
   const htmlFile = fs.readFileSync(htmlEntry, {encoding: 'utf8'})
   const htmlDocument = parse5utils.parse(htmlFile)
@@ -41,13 +40,13 @@ export default function patchHtml(
           // public/ and script/ paths are excluded from the compilation.
           const isExcludedPath = fileUtils.shouldExclude(
             path.resolve(htmlDir, filePath),
-            exclude
+            ['public/']
           )
           const excludedFilePath = path.join('/', path.normalize(filePath))
           // Check if the file is in the compilation entry map.
           const includeListEntry = fileUtils.isFromIncludeList(
-            includeList,
-            absolutePath
+            absolutePath,
+            includeList
           )
 
           switch (assetType) {

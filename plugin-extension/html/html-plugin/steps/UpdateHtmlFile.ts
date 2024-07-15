@@ -1,25 +1,20 @@
 import {type Compiler} from '@rspack/core'
 import {sources, Compilation} from '@rspack/core'
 
-import {type HtmlIncludeList, type InternalHtmlPluginInterface} from '../types'
-
-// Manifest fields
-import manifestFields from 'browser-extension-manifest-fields'
+import {type IncludeList, type InternalPluginInterface} from '../../../types'
 
 import patchHtml from '../lib/patchHtml'
 import {shouldExclude} from '../helpers/utils'
 import getFilePath from '../helpers/getFilePath'
-import * as fileUtils from '../helpers/utils'
+import getAssetsFromHtml from '../lib/getAssetsFromHtml'
 
 export default class UpdateHtmlFile {
   public readonly manifestPath: string
-  public readonly includeList: HtmlIncludeList
-  public readonly exclude: string[]
+  public readonly includeList?: IncludeList
 
-  constructor(options: InternalHtmlPluginInterface) {
+  constructor(options: InternalPluginInterface) {
     this.manifestPath = options.manifestPath
     this.includeList = options.includeList
-    this.exclude = options.exclude
   }
 
   public apply(compiler: Compiler): void {
@@ -35,19 +30,11 @@ export default class UpdateHtmlFile {
           () => {
             if (compilation.errors.length > 0) return
 
-            const manifestSource = fileUtils.getManifestContent(
-              compilation,
-              this.manifestPath
-            )
-
-            const htmlEntries: HtmlIncludeList = {
-              ...manifestFields(this.manifestPath, manifestSource as any).html,
-              ...this.includeList
-            }
+            const htmlEntries = this.includeList || {}
 
             for (const field of Object.entries(htmlEntries)) {
               const [feature, resource] = field
-              const html = resource?.html
+              const html = resource
 
               // Resources from the manifest lib can come as undefined.
               if (html) {
@@ -55,16 +42,13 @@ export default class UpdateHtmlFile {
                   compilation,
                   feature,
                   html,
-                  htmlEntries,
-                  this.exclude
+                  htmlEntries
                 )
 
-                if (!shouldExclude(html, this.exclude)) {
+                if (!shouldExclude(html, ['public/'])) {
                   const rawSource = new sources.RawSource(updatedHtml)
                   const filepath = getFilePath(feature, '.html')
-                 var w= compilation.getAssets()
-                  console.log('Updating HTML file:', w)
-                  // compilation.updateAsset(filepath, rawSource)
+                  compilation.updateAsset(filepath, rawSource)
                 }
               }
             }

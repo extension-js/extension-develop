@@ -3,10 +3,7 @@ import path from 'path'
 import {type Compiler} from '@rspack/core'
 import {sources, Compilation} from '@rspack/core'
 
-import {type HtmlIncludeList, type InternalHtmlPluginInterface} from '../types'
-
-// Manifest fields
-import manifestFields from 'browser-extension-manifest-fields'
+import {type IncludeList, type InternalPluginInterface} from '../../../types'
 
 import errors from '../helpers/errors'
 import {shouldExclude} from '../helpers/utils'
@@ -15,13 +12,11 @@ import getAssetsFromHtml from '../lib/getAssetsFromHtml'
 
 export default class AddAssetsToCompilation {
   public readonly manifestPath: string
-  public readonly includeList: HtmlIncludeList
-  public readonly exclude: string[]
+  public readonly includeList?: IncludeList
 
-  constructor(options: InternalHtmlPluginInterface) {
+  constructor(options: InternalPluginInterface) {
     this.manifestPath = options.manifestPath
     this.includeList = options.includeList
-    this.exclude = options.exclude
   }
 
   public apply(compiler: Compiler): void {
@@ -37,41 +32,33 @@ export default class AddAssetsToCompilation {
           () => {
             if (compilation.errors.length > 0) return
 
-            const manifestSource = fileUtils.getManifestContent(
-              compilation,
-              this.manifestPath
-            )
-
-            const manifestEntries = {
-              ...manifestFields(this.manifestPath, manifestSource as any).html,
-              ...this.includeList
-            }
+            const manifestEntries = this.includeList || {}
 
             for (const field of Object.entries(manifestEntries)) {
               const [feature, resource] = field
               const featureName = feature + '.html'
 
               // Resources from the manifest lib can come as undefined.
-              if (resource?.html) {
+              if (resource) {
                 const compilationAsset = compilation.getAsset(featureName)
                 if (compilationAsset) {
                   const htmlSource = compilationAsset.source.source().toString()
                   const staticAssets = getAssetsFromHtml(
-                    resource?.html,
+                    resource,
                     htmlSource
                   )?.static
 
                   const fileAssets = [...new Set(staticAssets)]
 
                   for (const asset of fileAssets) {
-                    if (!shouldExclude(asset, this.exclude)) {
+                    if (!shouldExclude(asset, ['public/'])) {
                       // Handle missing static assets. This is not covered
                       // by HandleCommonErrorsPlugin because static assets
                       // are not entrypoints.
                       if (!fs.existsSync(asset)) {
                         const includeListEntry = fileUtils.isFromIncludeList(
-                          this.includeList,
-                          asset
+                          asset,
+                          this.includeList
                         )
 
                         // If this asset is an asset emitted by some other plugin,
@@ -89,7 +76,7 @@ export default class AddAssetsToCompilation {
                             errors.fileNotFoundWarn(
                               compilation,
                               this.manifestPath,
-                              resource?.html,
+                              resource,
                               asset
                             )
                             return

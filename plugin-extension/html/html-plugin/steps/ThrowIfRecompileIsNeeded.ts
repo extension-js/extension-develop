@@ -3,10 +3,8 @@ import fs from 'fs'
 import {type Compiler} from '@rspack/core'
 import manifestFields from 'browser-extension-manifest-fields'
 
-import {
-  type InternalHtmlPluginInterface,
-  type HtmlIncludeList,
-} from '../types'
+import {type IncludeList, type InternalPluginInterface} from '../../../types'
+
 import {type Manifest} from '../../../types'
 import getAssetsFromHtml from '../lib/getAssetsFromHtml'
 import error from '../helpers/errors'
@@ -14,14 +12,12 @@ import {manifestFieldError} from '../helpers/messages'
 
 export default class ThrowIfRecompileIsNeeded {
   public readonly manifestPath: string
-  public readonly includeList: HtmlIncludeList
-  public readonly exclude: string[]
+  public readonly includeList?: IncludeList
   private initialHtmlAssets: Record<string, {js: string[]; css: string[]}> = {}
 
-  constructor(options: InternalHtmlPluginInterface) {
+  constructor(options: InternalPluginInterface) {
     this.manifestPath = options.manifestPath
     this.includeList = options.includeList
-    this.exclude = options.exclude
   }
 
   private hasEntriesChanged(

@@ -6,9 +6,8 @@ import {
   manifestMissingError,
   serverRestartRequired
 } from './messages'
-import manifestFields from 'browser-extension-manifest-fields'
 import getAssetsFromHtml from '../lib/getAssetsFromHtml'
-import {type HtmlIncludeList} from '../types'
+import {type IncludeList} from '../../../types'
 import {StatsError} from '@rspack/core'
 
 function manifestNotFoundError(compilation: Compilation) {
@@ -50,7 +49,7 @@ function serverStartRequiredError(
 
 function handleCantResolveError(
   manifestPath: string,
-  includeList: HtmlIncludeList,
+  includeList: IncludeList,
   error: StatsError
 ) {
   const cantResolveMsg = "Module not found: Error: Can't resolve "
@@ -58,19 +57,14 @@ function handleCantResolveError(
   const wrongFilename = customError.split("'")[1]
 
   if (error.message.includes(cantResolveMsg)) {
-    const allEntries = {
-      ...manifestFields(manifestPath).html,
-      ...includeList
-    }
-
-    for (const field of Object.entries(allEntries)) {
+    for (const field of Object.entries(includeList)) {
       const [, resource] = field
 
       // Resources from the manifest lib can come as undefined.
-      if (resource?.html) {
-        if (!fs.existsSync(resource?.html)) return null
+      if (resource) {
+        if (!fs.existsSync(resource)) return null
 
-        const htmlAssets = getAssetsFromHtml(resource?.html)
+        const htmlAssets = getAssetsFromHtml(resource)
         const jsAssets = htmlAssets?.js || []
         const cssAssets = htmlAssets?.css || []
 
@@ -78,11 +72,7 @@ function handleCantResolveError(
           jsAssets.includes(wrongFilename) ||
           cssAssets.includes(wrongFilename)
         ) {
-          const errorMsg = fileError(
-            manifestPath,
-            resource?.html,
-            wrongFilename
-          )
+          const errorMsg = fileError(manifestPath, resource, wrongFilename)
           return new rspack.WebpackError(errorMsg)
         }
       }

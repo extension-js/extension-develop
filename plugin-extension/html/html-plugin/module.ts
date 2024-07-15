@@ -2,7 +2,7 @@ import path from 'path'
 import {type Compiler} from '@rspack/core'
 
 import {type HtmlIncludeList} from './types'
-import {type PluginInterface} from '../../types'
+import {type IncludeList, type InternalPluginInterface} from '../../types'
 import EmitHtmlFile from './steps/EmitHtmlFile'
 import AddAssetsToCompilation from './steps/AddAssetsToCompilation'
 import AddScriptsAndStylesToCompilation from './steps/AddScriptsAndStylesToCompilation'
@@ -42,71 +42,50 @@ import getAssetsFromHtml from './lib/getAssetsFromHtml'
  */
 export default class HtmlPlugin {
   public readonly manifestPath: string
-  public readonly include?: string[]
-  public readonly exclude?: string[]
+  public readonly includeList?: IncludeList
 
-  constructor(options: PluginInterface) {
+  constructor(options: InternalPluginInterface) {
     this.manifestPath = options.manifestPath
-  }
-
-  private parseIncludes(includes: string[]): HtmlIncludeList {
-    if (!includes.length) return {}
-    return includes.reduce((acc, include) => {
-      const extname = path.extname(include)
-      const filename = path.basename(include, extname)
-
-      return {
-        ...acc,
-        [`pages/${filename}`]: {html: include, ...getAssetsFromHtml(include)}
-      }
-    }, {})
+    this.includeList = options.includeList
   }
 
   public apply(compiler: Compiler): void {
-    const includeList = this.parseIncludes(this.include || [])
-
     // 1 - Gets the original HTML file and add the HTML file to the compilation.
     new EmitHtmlFile({
       manifestPath: this.manifestPath,
-      includeList,
-      exclude: this.exclude || []
+      includeList: this.includeList,
     }).apply(compiler)
 
     // 2 - Adds the assets within the HTML file to the compilation,
     // such as <img>, <iframe>, <link>, <script> etc.
     new AddAssetsToCompilation({
       manifestPath: this.manifestPath,
-      includeList,
-      exclude: this.exclude || []
+      includeList: this.includeList,
     }).apply(compiler)
 
     // 3 - Adds the scripts and stylesheets within the HTML file
     // to the compilation.
     new AddScriptsAndStylesToCompilation({
       manifestPath: this.manifestPath,
-      includeList,
-      exclude: this.exclude || []
+      includeList: this.includeList,
     }).apply(compiler)
 
     // 4 - Updates the HTML file with the new assets and entrypoints.
     new UpdateHtmlFile({
       manifestPath: this.manifestPath,
-      includeList,
-      exclude: this.exclude || []
+      includeList: this.includeList,
     }).apply(compiler)
 
-    // 5 - Ensure scripts within the HTML file are HMR enabled.
+    // // 5 - Ensure scripts within the HTML file are HMR enabled.
     // new EnsureHMRForScripts({
     //   manifestPath: this.manifestPath,
-    //   includeList,
-    //   exclude: this.exclude || []
+    //   includeList: this.includeList,
     // }).apply(compiler)
 
     // 6 - Ensure HTML file is recompiled upon changes.
     new AddToFileDependencies({
       manifestPath: this.manifestPath,
-      includeList,
-      exclude: this.exclude || []
+      includeList: this.includeList,
     }).apply(compiler)
 
     // 7 - Suggest user to recompile if any style
@@ -115,15 +94,13 @@ export default class HtmlPlugin {
     // entrypoints at runtime.
     new ThrowIfRecompileIsNeeded({
       manifestPath: this.manifestPath,
-      includeList,
-      exclude: this.exclude || []
+      includeList: this.includeList,
     }).apply(compiler)
 
     // 7 - Handle common errors.
     new HandleCommonErrors({
       manifestPath: this.manifestPath,
-      includeList,
-      exclude: this.exclude || []
+      includeList: this.includeList,
     }).apply(compiler)
   }
 }
