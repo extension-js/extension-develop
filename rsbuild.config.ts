@@ -24,9 +24,9 @@ const sharedConfig = defineConfig({
     }
   },
   // html: {},
-  tools: {
-    htmlPlugin: false,
-  },
+  // tools: {
+  //   htmlPlugin: false,
+  // },
   output: {
     manifest: true,
     distPath: {

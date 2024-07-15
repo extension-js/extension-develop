@@ -8,7 +8,7 @@ import {
 } from './messages'
 import manifestFields from 'browser-extension-manifest-fields'
 import getAssetsFromHtml from '../lib/getAssetsFromHtml'
-import {type IncludeList} from '../types'
+import {type HtmlIncludeList} from '../types'
 import {StatsError} from '@rspack/core'
 
 function manifestNotFoundError(compilation: Compilation) {
@@ -50,7 +50,7 @@ function serverStartRequiredError(
 
 function handleCantResolveError(
   manifestPath: string,
-  includeList: IncludeList,
+  includeList: HtmlIncludeList,
   error: StatsError
 ) {
   const cantResolveMsg = "Module not found: Error: Can't resolve "

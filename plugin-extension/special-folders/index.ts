@@ -9,7 +9,6 @@ import {
   generatePagesEntries,
   generateScriptsEntries,
 } from './generate-entries'
-import {copyPublicFolder} from './copy-public-folder'
 import {warnUponFolderChanges} from './warn-upon-folder-changes'
 
 /**
@@ -51,9 +50,6 @@ export const specialFolders = ({
       pages: pagesList,
       scripts: scriptsList
     }));
-
-    // TODO: cezaraugusto rsbuild has built-in support for public folder
-    copyPublicFolder({manifestPath}).setup(api)
 
     if (process.env.NODE_ENV === 'development') {
       if (api.getRsbuildConfig().dev?.watchFiles) {

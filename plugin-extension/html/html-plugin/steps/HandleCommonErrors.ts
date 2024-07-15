@@ -1,12 +1,12 @@
 import {type Compiler} from '@rspack/core'
-import {type IncludeList, type StepPluginInterface} from '../types'
+import {type HtmlIncludeList, type InternalHtmlPluginInterface} from '../types'
 import errors from '../helpers/errors'
 
 export default class CommonErrorsPlugin {
   public readonly manifestPath: string
-  public readonly includeList: IncludeList
+  public readonly includeList: HtmlIncludeList
 
-  constructor(options: StepPluginInterface) {
+  constructor(options: InternalHtmlPluginInterface) {
     this.manifestPath = options.manifestPath
     this.includeList = options.includeList
   }

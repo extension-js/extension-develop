@@ -9,7 +9,8 @@ import {type Schema} from 'schema-utils/declarations/validate'
 import manifestFields from 'browser-extension-manifest-fields'
 
 import getAssetsFromHtml from '../lib/getAssetsFromHtml'
-import {type IncludeList, type Manifest} from '../types'
+import {type HtmlIncludeList} from '../types'
+import {type Manifest} from '../../../types'
 import {isUsingReact} from '../helpers/utils'
 
 const schema: Schema = {
@@ -33,7 +34,7 @@ const schema: Schema = {
 interface InjectContentAcceptContext extends LoaderContext<any> {
   getOptions: () => {
     manifestPath: string
-    includeList: IncludeList
+    includeList: HtmlIncludeList
     exclude: string[]
   }
 }
@@ -63,7 +64,7 @@ if (import.meta.webpackHot) { import.meta.webpackHot.accept() };
   if (isUsingReact(projectPath)) return source
 
   const allEntries = {
-    ...manifestFields(manifestPath, manifest).html,
+    ...manifestFields(manifestPath, manifest as any).html,
     ...includeList
   }
 

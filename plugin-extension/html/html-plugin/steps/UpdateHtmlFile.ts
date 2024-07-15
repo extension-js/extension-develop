@@ -1,7 +1,7 @@
 import {type Compiler} from '@rspack/core'
 import {sources, Compilation} from '@rspack/core'
 
-import {type IncludeList, type StepPluginInterface} from '../types'
+import {type HtmlIncludeList, type InternalHtmlPluginInterface} from '../types'
 
 // Manifest fields
 import manifestFields from 'browser-extension-manifest-fields'
@@ -13,10 +13,10 @@ import * as fileUtils from '../helpers/utils'
 
 export default class UpdateHtmlFile {
   public readonly manifestPath: string
-  public readonly includeList: IncludeList
+  public readonly includeList: HtmlIncludeList
   public readonly exclude: string[]
 
-  constructor(options: StepPluginInterface) {
+  constructor(options: InternalHtmlPluginInterface) {
     this.manifestPath = options.manifestPath
     this.includeList = options.includeList
     this.exclude = options.exclude
@@ -40,8 +40,8 @@ export default class UpdateHtmlFile {
               this.manifestPath
             )
 
-            const htmlEntries: IncludeList = {
-              ...manifestFields(this.manifestPath, manifestSource).html,
+            const htmlEntries: HtmlIncludeList = {
+              ...manifestFields(this.manifestPath, manifestSource as any).html,
               ...this.includeList
             }
 

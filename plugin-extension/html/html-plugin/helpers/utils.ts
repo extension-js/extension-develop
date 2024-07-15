@@ -1,7 +1,8 @@
 import path from 'path'
 import fs from 'fs'
 import {type Compilation} from '@rspack/core'
-import {type IncludeList, type Manifest} from '../types'
+import {type HtmlIncludeList} from '../types'
+import {type Manifest} from '../../../types'
 
 function isUsingReact(projectDir: string) {
   const packageJsonPath = path.join(projectDir, 'package.json')
@@ -37,7 +38,7 @@ function getResolvedPath(context: string, filePath: string, basePath: string) {
 }
 
 function isFromIncludeList(
-  includeList: IncludeList,
+  includeList: HtmlIncludeList,
   filePath: string
 ): boolean {
   return Object.values(includeList).some((value) => {
@@ -46,7 +47,7 @@ function isFromIncludeList(
 }
 
 function getIncludeEntry(
-  includeList: IncludeList,
+  includeList: HtmlIncludeList,
   filePath: string,
   extension: string
 ): string {

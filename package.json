@@ -34,7 +34,12 @@
   },
   "dependencies": {
     "@rsbuild/core": "1.0.1-beta.0",
+    "browser-extension-manifest-fields": "*",
     "detect-package-manager": "^3.0.2",
+    "loader-utils": "^3.2.1",
+    "parse5": "^7.1.2",
+    "parse5-utils": "^2.0.0",
+    "schema-utils": "^4.2.0",
     "ts-node": "^10.9.2",
     "webextension-polyfill": "^0.12.0"
   }

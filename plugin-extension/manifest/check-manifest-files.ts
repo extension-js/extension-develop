@@ -10,7 +10,7 @@ api: RsbuildPluginAPI
 
   for (const [field, value] of Object.entries(htmlFields)) {
     if (value) {
-      console.log({value})
+      // console.log({value})
       // const fieldError = errors.manifestFieldError(field, value?.html)
 
       // if (!fs.existsSync(value.html)) {

@@ -1,14 +1,14 @@
 import path from 'path'
 import {type Compiler} from '@rspack/core'
 
-import {type IncludeList, type StepPluginInterface} from '../types'
+import {type HtmlIncludeList, type InternalHtmlPluginInterface} from '../types'
 
 export default class EnsureHMRForScripts {
   public readonly manifestPath: string
-  public readonly includeList: IncludeList
+  public readonly includeList: HtmlIncludeList
   public readonly exclude: string[]
 
-  constructor(options: StepPluginInterface) {
+  constructor(options: InternalHtmlPluginInterface) {
     this.manifestPath = options.manifestPath
     this.includeList = options.includeList
     this.exclude = options.exclude || []

@@ -7,13 +7,13 @@ import parse5utils from 'parse5-utils'
 import parseHtml from './parseHtml'
 import * as fileUtils from '../helpers/utils'
 import getFilePath from '../helpers/getFilePath'
-import {type IncludeList} from '../types'
+import {type HtmlIncludeList} from '../types'
 
 export default function patchHtml(
   compilation: Compilation,
   feature: string,
   htmlEntry: string,
-  includeList: IncludeList,
+  includeList: HtmlIncludeList,
   exclude: string[]
 ) {
   const htmlFile = fs.readFileSync(htmlEntry, {encoding: 'utf8'})

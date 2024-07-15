@@ -1,7 +1,8 @@
 import path from 'path'
 import {type Compiler} from '@rspack/core'
 
-import {type IncludeList, type HtmlPluginInterface} from './types'
+import {type HtmlIncludeList} from './types'
+import {type PluginInterface} from '../../types'
 import EmitHtmlFile from './steps/EmitHtmlFile'
 import AddAssetsToCompilation from './steps/AddAssetsToCompilation'
 import AddScriptsAndStylesToCompilation from './steps/AddScriptsAndStylesToCompilation'
@@ -44,13 +45,11 @@ export default class HtmlPlugin {
   public readonly include?: string[]
   public readonly exclude?: string[]
 
-  constructor(options: HtmlPluginInterface) {
+  constructor(options: PluginInterface) {
     this.manifestPath = options.manifestPath
-    this.include = options.include || []
-    this.exclude = options.exclude || []
   }
 
-  private parseIncludes(includes: string[]): IncludeList {
+  private parseIncludes(includes: string[]): HtmlIncludeList {
     if (!includes.length) return {}
     return includes.reduce((acc, include) => {
       const extname = path.extname(include)
@@ -97,11 +96,11 @@ export default class HtmlPlugin {
     }).apply(compiler)
 
     // 5 - Ensure scripts within the HTML file are HMR enabled.
-    new EnsureHMRForScripts({
-      manifestPath: this.manifestPath,
-      includeList,
-      exclude: this.exclude || []
-    }).apply(compiler)
+    // new EnsureHMRForScripts({
+    //   manifestPath: this.manifestPath,
+    //   includeList,
+    //   exclude: this.exclude || []
+    // }).apply(compiler)
 
     // 6 - Ensure HTML file is recompiled upon changes.
     new AddToFileDependencies({

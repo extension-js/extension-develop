@@ -5,18 +5,10 @@ function getBookmarks(
   compiledEntries: Record<string, any>,
   publicFolder: string
 ) {
-  if (!compiledEntries['chrome_url_overrides/bookmarks.html']) {
-    return undefined
-  }
-
-  if (compiledEntries['chrome_url_overrides/bookmarks.html'].includes(publicFolder)) {
-    return undefined
-  }
-
   return {
     chrome_url_overrides: {
       ...manifest.chrome_url_overrides,
-      bookmarks: compiledEntries['chrome_url_overrides/bookmarks.html']
+      bookmarks: '/chrome_url_overrides/bookmarks.html'
     }
   }
 }
@@ -26,18 +18,10 @@ function getHistory(
   compiledEntries: Record<string, any>,
   publicFolder: string
 ) {
-  if (!compiledEntries['chrome_url_overrides/history.html']) {
-    return undefined
-  }
-
-  if (compiledEntries['chrome_url_overrides/history.html'].includes(publicFolder)) {
-    return undefined
-  }
-
   return {
     chrome_url_overrides: {
             ...manifest.chrome_url_overrides,
-      history: compiledEntries['chrome_url_overrides/history.html']
+      history: '/chrome_url_overrides/history.html'
     }
   }
 }
@@ -47,18 +31,10 @@ function newTab(
   compiledEntries: Record<string, any>,
   publicFolder: string
 ) {
-  if (!compiledEntries['chrome_url_overrides/newtab.html']) {
-    return undefined
-  }
-
-  if (compiledEntries['chrome_url_overrides/newtab.html'].includes(publicFolder)) {
-    return undefined
-  }
-
   return {
     chrome_url_overrides: {
             ...manifest.chrome_url_overrides,
-      newtab: compiledEntries['chrome_url_overrides/newtab.html']
+      newtab: '/chrome_url_overrides/newtab.html'
     }
   }
 }
@@ -69,15 +45,17 @@ export function chromeUrlOverrides(
   publicFolder: string
 ) {
 
-  if (compiledEntries['chrome_url_overrides/history.html']) {
+  console.log(compiledEntries['chrome_url_overrides/newtab'])
+
+  if (compiledEntries['chrome_url_overrides/history']) {
     return getHistory(manifest, compiledEntries, publicFolder)
   }
 
-  if (compiledEntries['chrome_url_overrides/bookmarks.html']) {
+  if (compiledEntries['chrome_url_overrides/bookmarks']) {
     return getBookmarks(manifest, compiledEntries, publicFolder)
   }
 
-  if (compiledEntries['chrome_url_overrides/newtab.html']) {
+  if (compiledEntries['chrome_url_overrides/newtab']) {
     return newTab(manifest, compiledEntries, publicFolder)
   }
 }

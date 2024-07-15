@@ -1,9 +1,8 @@
-import fs from 'fs'
-import path from 'path'
-import {type RsbuildPlugin, type RsbuildPluginAPI} from '@rsbuild/core'
+import {type RsbuildPlugin} from '@rsbuild/core'
 
-import {type PluginInterface, type Manifest} from '../types'
-import HtmlPlugin from '../../../../packages/html-plugin'
+import {type PluginInterface} from '../types'
+import HtmlPlugin from 'webpack-browser-extension-html'
+
 /**
  * HtmlPlugin is responsible for handling the HTML file
  * defined in the manifest.json. Static assets and CSS files
@@ -36,23 +35,18 @@ export const html = ({
 }: PluginInterface): RsbuildPlugin => ({
   name: 'extension-develop:html',
   setup: (api) => {
-    const manifestsScripts = api.useExposed('manifest-fields')().html
-    const nonManifestScripts = api.useExposed('special-folders')().pages
+    // const manifestsScripts = api.useExposed('manifest-fields')().html
+    // const nonManifestScripts = api.useExposed('special-folders')().pages
 
-    const htmlFields: Record<string, any> = {
-      ...manifestsScripts,
-      ...nonManifestScripts
-    }
-
-    // console.log(htmlFields)
     api.modifyRsbuildConfig((config, {mergeRsbuildConfig}) => {      
       return mergeRsbuildConfig(config, {
         tools: {
+          htmlPlugin: true,
           rspack: {
             plugins: [
               new HtmlPlugin({
                 manifestPath,
-                include: [],
+                // include: nonManifestScripts,
                 exclude: []
               })
             ]

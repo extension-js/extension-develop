@@ -1,18 +1,16 @@
-import {type ManifestBase} from './manifest-types'
-
 export interface HtmlPluginInterface {
   manifestPath: string
   include?: string[]
   exclude?: string[]
 }
 
-export interface StepPluginInterface {
+export interface InternalHtmlPluginInterface {
   manifestPath: string
-  includeList: IncludeList
+  includeList: HtmlIncludeList
   exclude: string[]
 }
 
-export type IncludeList = Record<
+export type HtmlIncludeList = Record<
   string,
   | {
       html: string
@@ -31,5 +29,3 @@ export type ResourceType =
   | 'staticSrc'
   | 'staticHref'
   | 'empty'
-
-export type Manifest = ManifestBase
