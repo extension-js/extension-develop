@@ -1,6 +1,9 @@
-import { type Manifest } from '../../types';
+import { type Manifest } from '../../../types';
 
-export default function userScripts(manifest: Manifest): string | undefined {
+export default function userScripts(
+  context: string,
+  manifest: Manifest,
+): string | undefined {
   if (
     !manifest ||
     !manifest.user_scripts ||

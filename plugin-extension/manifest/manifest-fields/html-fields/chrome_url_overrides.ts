@@ -1,8 +1,10 @@
 import path from 'path';
 
-import { type Manifest } from '../../types';
+import { type Manifest } from '../../../types';
 
 export default function chromeUrlOverrides(
+  context: string,
+
   manifest: Manifest,
 ): Record<string, Manifest | undefined> {
   let chromeUrlOverride: Record<string, any> = { newtab: undefined };
@@ -15,7 +17,7 @@ export default function chromeUrlOverrides(
     const historyPage: string = manifest.chrome_url_overrides.history;
 
     chromeUrlOverride = {
-      'chrome_url_overrides/history': historyPage,
+      'chrome_url_overrides/history': path.join(context, historyPage),
     };
   }
 
@@ -23,7 +25,7 @@ export default function chromeUrlOverrides(
     const newtabPage = manifest.chrome_url_overrides.newtab;
 
     chromeUrlOverride = {
-      'chrome_url_overrides/newtab': newtabPage,
+      'chrome_url_overrides/newtab': path.join(context, newtabPage),
     };
   }
 
@@ -31,7 +33,7 @@ export default function chromeUrlOverrides(
     const bookmarksPage = manifest.chrome_url_overrides.bookmarks;
 
     chromeUrlOverride = {
-      'chrome_url_overrides/bookmarks': bookmarksPage,
+      'chrome_url_overrides/bookmarks': path.join(context, bookmarksPage),
     };
   }
 

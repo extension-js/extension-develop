@@ -1,8 +1,11 @@
 import path from 'path';
 
-import { type Manifest } from '../../types';
+import { type Manifest } from '../../../types';
 
-export default function background(manifest: Manifest): string | undefined {
+export default function background(
+  context: string,
+  manifest: Manifest,
+): string | undefined {
   // @ts-ignore
   if (!manifest || !manifest.background || !manifest.background.page) {
     return undefined;
@@ -11,5 +14,5 @@ export default function background(manifest: Manifest): string | undefined {
   // @ts-ignore
   const backgroundPage: string = manifest.background.page;
 
-  return backgroundPage;
+  return path.resolve(context, backgroundPage);
 }

@@ -1,6 +1,10 @@
-import { type Manifest } from '../../types';
+import path from 'path';
+import { type Manifest } from '../../../types';
 
-export default function action(manifest: Manifest): string | undefined {
+export default function action(
+  context: string,
+  manifest: Manifest,
+): string | undefined {
   if (
     !manifest ||
     !manifest.browser_action ||
@@ -11,5 +15,5 @@ export default function action(manifest: Manifest): string | undefined {
 
   const browserActionPage: string = manifest.browser_action.default_popup;
 
-  return browserActionPage;
+  return path.join(context, browserActionPage);
 }

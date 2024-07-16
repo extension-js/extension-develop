@@ -1,6 +1,9 @@
-import { type Manifest } from '../../types';
+import { type Manifest } from '../../../types';
 
-export default function background(manifest: Manifest): string[] | undefined {
+export default function background(
+  context: string,
+  manifest: Manifest,
+): string[] | undefined {
   if (!manifest || !manifest.background) {
     return undefined;
   }

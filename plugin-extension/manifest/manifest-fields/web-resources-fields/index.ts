@@ -1,6 +1,7 @@
-import { type Manifest } from '../../types';
+import { type Manifest } from '../../../types';
 
 export default function getWebAccessibleResources(
+  context: string,
   manifest: Manifest,
 ): Manifest['web_accessible_resources'] | undefined {
   if (

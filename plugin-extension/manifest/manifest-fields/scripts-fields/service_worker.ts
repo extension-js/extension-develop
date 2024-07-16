@@ -1,6 +1,9 @@
-import { type Manifest } from '../../types';
+import { type Manifest } from '../../../types';
 
-export default function serviceWorker(manifest: Manifest): string | undefined {
+export default function serviceWorker(
+  context: string,
+  manifest: Manifest,
+): string | undefined {
   if (!manifest || !manifest.background) {
     return undefined;
   }

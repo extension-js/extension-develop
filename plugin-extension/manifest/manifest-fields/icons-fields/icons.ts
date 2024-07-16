@@ -1,7 +1,10 @@
 import path from 'path';
-import { type Manifest } from '../../types';
+import { type Manifest } from '../../../types';
 
-export default function icons(manifest: Manifest): string[] | undefined {
+export default function icons(
+  context: string,
+  manifest: Manifest,
+): string[] | undefined {
   if (!manifest || !manifest.icons) return undefined;
 
   const defaultIcons: string[] = [];

@@ -1,6 +1,8 @@
-import { ThemeIcon, type Manifest } from '../../types';
+import { ThemeIcon, type Manifest } from '../../../types';
 
 export default function browserActionThemeIcon(
+  context: string,
+
   manifest: Manifest,
 ): ThemeIcon[] | undefined {
   if (

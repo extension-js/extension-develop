@@ -1,6 +1,7 @@
-import { type Manifest } from '../../types';
+import { type Manifest } from '../../../types';
 
 export default function pageAction(
+  context: string,
   manifest: Manifest,
 ): string | string[] | undefined {
   if (

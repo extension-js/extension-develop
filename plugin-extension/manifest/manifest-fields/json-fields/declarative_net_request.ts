@@ -1,6 +1,7 @@
-import { type Manifest } from '../../types';
+import { type Manifest } from '../../../types';
 
 export default function declarativeNetRequest(
+  context: string,
   manifest: Manifest,
 ): Record<string, string | undefined> {
   const ruleResources: Record<string, string> = {};
@@ -17,7 +18,10 @@ export default function declarativeNetRequest(
     manifest.declarative_net_request.rule_resources;
 
   declarativeNetRequest.forEach((resource: { id: string; path: string }) => {
-    ruleResources[`declarative_net_request/${resource.id}`] = resource.path;
+    ruleResources[`declarative_net_request/${resource.id}`] = path.join(
+      context,
+      resource.path,
+    );
   });
 
   return ruleResources;

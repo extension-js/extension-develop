@@ -1,7 +1,9 @@
 import path from 'path';
-import { type Manifest } from '../../types';
+import { type Manifest } from '../../../types';
 
 export default function browserAction(
+  context: string,
+
   manifest: Manifest,
 ): string | string[] | undefined {
   if (

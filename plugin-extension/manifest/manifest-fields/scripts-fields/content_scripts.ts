@@ -1,6 +1,7 @@
-import { type Manifest } from '../../types';
+import { type Manifest } from '../../../types';
 
 export default function contentScript(
+  context: string,
   manifest: Manifest,
 ): Record<string, string[] | undefined> {
   if (!manifest || !manifest.content_scripts)
@@ -10,7 +11,7 @@ export default function contentScript(
     if (content.js?.length === 0) return undefined;
 
     return content.js?.map((js) => {
-      const contentPath = js;
+      const contentPath = path.join(context, js);
 
       return contentPath;
     });
@@ -20,7 +21,7 @@ export default function contentScript(
     if (content.css?.length === 0) return undefined;
 
     return content.css?.map((css) => {
-      const contentPath = css;
+      const contentPath = path.join(context, css);
 
       return contentPath;
     });

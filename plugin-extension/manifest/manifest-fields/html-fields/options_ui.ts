@@ -1,6 +1,11 @@
-import { type Manifest } from '../../types';
+import path from 'path';
+import { type Manifest } from '../../../types';
 
-export default function optionsUi(manifest: Manifest): string | undefined {
+export default function optionsUi(
+  context: string,
+
+  manifest: Manifest,
+): string | undefined {
   if (manifest.options_page) {
     const optionsPage: string = manifest.options_page;
 
@@ -13,5 +18,5 @@ export default function optionsUi(manifest: Manifest): string | undefined {
 
   const optionsPage: string = manifest.options_ui.page;
 
-  return optionsPage;
+  return path.join(context, optionsPage);
 }

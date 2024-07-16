@@ -1,6 +1,9 @@
-import { type Manifest } from '../../types';
+import { type Manifest } from '../../../types';
 
-export default function sidebarAction(manifest: Manifest): string | undefined {
+export default function sidebarAction(
+  context: string,
+  manifest: Manifest,
+): string | undefined {
   if (
     !manifest ||
     !manifest.sidebar_action ||

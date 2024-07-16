@@ -1,11 +1,16 @@
-import { type Manifest } from '../../types';
+import path from 'path';
+import { type Manifest } from '../../../types';
 
-export default function devtools(manifest: Manifest): string | undefined {
+export default function devtools(
+  context: string,
+
+  manifest: Manifest,
+): string | undefined {
   if (!manifest || !manifest.devtools_page) {
     return undefined;
   }
 
   const devtoolsPage: string = manifest.devtools_page;
 
-  return devtoolsPage;
+  return path.join(context, devtoolsPage);
 }

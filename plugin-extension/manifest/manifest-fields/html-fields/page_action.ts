@@ -1,6 +1,10 @@
-import { type Manifest } from '../../types';
+import path from 'path';
+import { type Manifest } from '../../../types';
 
-export default function pageAction(manifest: Manifest): string | undefined {
+export default function pageAction(
+  context: string,
+  manifest: Manifest,
+): string | undefined {
   if (
     !manifest ||
     !manifest.page_action ||
@@ -11,5 +15,5 @@ export default function pageAction(manifest: Manifest): string | undefined {
 
   const pageActionPage: string = manifest.page_action.default_popup;
 
-  return pageActionPage;
+  return path.join(context, pageActionPage);
 }
