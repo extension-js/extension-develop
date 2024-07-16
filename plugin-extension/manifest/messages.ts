@@ -1,17 +1,18 @@
+import path from 'path';
+
 function serverRestartRequired() {
   const errorMessage = `[manifest.json] Entry Point Modification Found.
 
-Changing the path of non-static assets defined in manifest.json requires a server restart. To apply these changes, restart the program and try again.`;
+Changing the path of non-static assets defined in manifest.json requires a server restart. To apply these changes, restart the program.`;
   return errorMessage;
 }
 
 function manifestFieldError(feature: string, htmlFilePath: string) {
-  const hintMessage = `Check the \`${feature.replace(
-    '/',
-    '.',
-  )}\` field in your manifest.json file and try again.`;
+  const hintMessage =
+    `Check the "${feature.replace('/', '.')}" ` +
+    `field in your manifest.json file.`;
 
-  const errorMessage = `[manifest.json] File path \`${htmlFilePath}\` not found. ${hintMessage}`;
+  const errorMessage = `[manifest.json] File path "${path.relative(process.cwd(), htmlFilePath)}" not found. ${hintMessage}`;
   return errorMessage;
 }
 

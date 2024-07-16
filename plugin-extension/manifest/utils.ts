@@ -1,5 +1,5 @@
 import { type Compilation } from '@rspack/core';
-import { type Manifest } from '../_manifest-plugin/types';
+import { type Manifest } from '../types';
 
 /**
  * Change the path from win style to unix style

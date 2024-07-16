@@ -30,12 +30,12 @@ function transformManifest(api: RsbuildPluginAPI) {
   );
   const compiledEntries: Record<string, any> = defaultOutputManifest.entries;
   const publicFolder =
+    !api.getRsbuildConfig().server?.publicDir ||
     typeof api.getRsbuildConfig().server?.publicDir === 'boolean'
       ? 'public/'
       : (api.getRsbuildConfig().server?.publicDir as Record<string, string>)
           .name + '/';
 
-  // console.log({publicFolder})
   const manifest = api.useExposed('manifest-json')();
 
   const patchedManifest: Manifest = {

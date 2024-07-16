@@ -1,9 +1,10 @@
 import fs from 'fs';
 import { logger } from '@rsbuild/core';
+import { IncludeList } from '../types';
 import manifestFields from 'browser-extension-manifest-fields';
 
 import messages from './messages';
-import { type Manifest } from '../_manifest-plugin/types';
+import { type Manifest } from '../types';
 
 function manifestNotFoundError() {
   logger.error(`[manifest.json]: ${messages.manifestNotFoundError}`);
@@ -13,25 +14,19 @@ function manifestInvalidError(error: any) {
   logger.error(`[manifest.json]: ${messages.manifestInvalidError}`);
 }
 
-function handleHtmlErrors(manifestPath: string) {
-  const manifest: Manifest = require(manifestPath);
-  const htmlFields = manifestFields(manifestPath, manifest).html;
-
+function handleHtmlErrors(htmlFields: IncludeList) {
   for (const [field, value] of Object.entries(htmlFields)) {
     if (value) {
-      const fieldError = messages.manifestFieldError(field, value?.html);
+      const fieldError = messages.manifestFieldError(field, value);
 
-      if (!fs.existsSync(value.html)) {
+      if (!fs.existsSync(value)) {
         logger.error(fieldError);
       }
     }
   }
 }
 
-function handleIconsErrors(manifestPath: string) {
-  const manifest: Manifest = require(manifestPath);
-  const iconsFields = manifestFields(manifestPath, manifest).icons;
-
+function handleIconsErrors(iconsFields: IncludeList) {
   for (const [field, value] of Object.entries(iconsFields)) {
     if (value) {
       if (typeof value === 'string') {
@@ -77,10 +72,7 @@ function handleIconsErrors(manifestPath: string) {
   }
 }
 
-function handleJsonErrors(manifestPath: string) {
-  const manifest: Manifest = require(manifestPath);
-  const jsonFields = manifestFields(manifestPath, manifest).json;
-
+function handleJsonErrors(jsonFields: IncludeList) {
   for (const [field, value] of Object.entries(jsonFields)) {
     if (value) {
       const valueArr: string[] = Array.isArray(value) ? value : [value];
@@ -96,10 +88,7 @@ function handleJsonErrors(manifestPath: string) {
   }
 }
 
-function handleScriptsErrors(manifestPath: string) {
-  const manifest: Manifest = require(manifestPath);
-  const scriptsFields = manifestFields(manifestPath, manifest).scripts;
-
+function handleScriptsErrors(scriptsFields: IncludeList) {
   for (const [field, value] of Object.entries(scriptsFields)) {
     if (value) {
       const valueArr = Array.isArray(value) ? value : [value];

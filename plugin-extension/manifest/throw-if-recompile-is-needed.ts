@@ -34,7 +34,6 @@ export const throwIfRecompileIsNeeded = ({
   name: 'manifest:throw-if-recompile-is-needed',
   setup: (api) => {
     api.onDevCompileDone(({ stats }) => {
-      // console.log({stats})
       // const files = compiler.modifiedFiles || new Set<string>()
       // if (files.has(manifestPath)) {
       //   const updatedValues = getFlattenedAssets(api).sort()

@@ -28,10 +28,10 @@ export const manifest = ({ manifestPath }: PluginInterface): RsbuildPlugin => ({
     // can modify it.
     emitManifest({ manifestPath }).setup(api);
 
-    // 2 - With the manifest file, expose its fields
+    // 2 - With the manifest api.context.rootPathfile, expose its fields
     // so other plugins can consume its data without
     // requiring the manifest file every time.
-    manifestFields().setup(api);
+    manifestFields({ manifestPath }).setup(api);
 
     // 3 - Ensure the files defined in the manifest have valid paths,
     // throwing errors if they don't.
