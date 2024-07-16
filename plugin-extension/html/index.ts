@@ -55,15 +55,15 @@ export const html = ({ manifestPath }: PluginInterface): RsbuildPlugin => ({
         //   }
         // },
         tools: {
-          htmlPlugin: false,
-          rspack: {
-            plugins: [
-              new HtmlPlugin({
-                manifestPath,
-                includeList: htmlFields,
-              }),
-            ],
-          },
+          htmlPlugin: true,
+          // rspack: {
+          //   plugins: [
+          //     new HtmlPlugin({
+          //       manifestPath,
+          //       includeList: htmlFields,
+          //     }),
+          //   ],
+          // },
         },
       });
     });

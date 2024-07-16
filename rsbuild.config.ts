@@ -16,7 +16,11 @@ console.log('MANIFEST_PATH:', __dirname, projectPath);
 const sharedConfig = defineConfig({
   plugins: [pluginExtension({ manifestPath: MANIFEST_PATH })],
   dev: {
-    writeToDisk: true, // (file) => !file.includes('.hot-update.'),
+    client: {
+      protocol: 'ws',
+      host: 'localhost',
+    },
+    writeToDisk: (filename) => !filename.includes('.hot-update.'),
     watchFiles: {
       paths: path.join(projectPath, 'manifest.json'),
     },
@@ -57,16 +61,18 @@ const sharedConfig = defineConfig({
     },
   },
   server: {
-    printUrls({ urls, port, protocol, routes }) {
-      // console.log(urls); // ['http://localhost:3000', 'http://192.168.0.1:3000']
-      // console.log(port); // 3000
-      // console.log(protocol); // 'http' or 'https'
-      // console.log(routes); // ['/', '/about', '/contact']
-    },
-    publicDir: {
-      name: 'public',
-      watch: true,
-    },
+    publicDir: false,
+    port: process.env.PORT ? Number(process.env.PORT) : 3000,
+    // printUrls({ urls, port, protocol, routes }) {
+    //   // console.log(urls); // ['http://localhost:3000', 'http://192.168.0.1:3000']
+    //   // console.log(port); // 3000
+    //   // console.log(protocol); // 'http' or 'https'
+    //   // console.log(routes); // ['/', '/about', '/contact']
+    // },
+    // publicDir: {
+    //   name: 'public',
+    //   // watch: true,
+    // },
   },
   // security: {},
   // performance: {},
