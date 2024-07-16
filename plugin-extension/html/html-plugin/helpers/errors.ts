@@ -6,7 +6,7 @@ import {
   manifestMissingError,
   serverRestartRequired,
 } from './messages';
-import getAssetsFromHtml from '../lib/getAssetsFromHtml';
+import getAssetsFromHtml from '../lib/get-assets-from-html';
 import { type IncludeList } from '../../../types';
 import { StatsError } from '@rspack/core';
 
@@ -58,13 +58,13 @@ function handleCantResolveError(
 
   if (error.message.includes(cantResolveMsg)) {
     for (const field of Object.entries(includeList)) {
-      const [, resource] = field;
+      const [, featureDataPath] = field;
 
       // Resources from the manifest lib can come as undefined.
-      if (resource) {
-        if (!fs.existsSync(resource)) return null;
+      if (featureDataPath) {
+        if (!fs.existsSync(featureDataPath)) return null;
 
-        const htmlAssets = getAssetsFromHtml(resource);
+        const htmlAssets = getAssetsFromHtml(featureDataPath);
         const jsAssets = htmlAssets?.js || [];
         const cssAssets = htmlAssets?.css || [];
 
@@ -72,7 +72,11 @@ function handleCantResolveError(
           jsAssets.includes(wrongFilename) ||
           cssAssets.includes(wrongFilename)
         ) {
-          const errorMsg = fileError(manifestPath, resource, wrongFilename);
+          const errorMsg = fileError(
+            manifestPath,
+            featureDataPath,
+            wrongFilename,
+          );
           return new rspack.WebpackError(errorMsg);
         }
       }

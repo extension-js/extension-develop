@@ -4,7 +4,7 @@ import { type Compilation } from '@rspack/core';
 // @ts-ignore
 import parse5utils from 'parse5-utils';
 
-import parseHtml from './parseHtml';
+import parseHtml from './parse-html';
 import * as fileUtils from '../helpers/utils';
 import getFilePath from '../helpers/getFilePath';
 import { type IncludeList } from '../../../types';
@@ -147,16 +147,16 @@ export default function patchHtml(
           // and it inlines the styles into the page.
           // In production mode we use MiniCssExtractPlugin to extract the CSS
           // into a separate file.
-          if (compilation.options.mode === 'production') {
-            const linkTag = parse5utils.createNode('link');
-            linkTag.attrs = [
-              { name: 'rel', value: 'stylesheet' },
-              { name: 'href', value: getFilePath(feature, '.css', true) },
-            ];
+          // if (compilation.options.mode === 'production') {
+          const linkTag = parse5utils.createNode('link');
+          linkTag.attrs = [
+            { name: 'rel', value: 'stylesheet' },
+            { name: 'href', value: getFilePath(feature, '.css', true) },
+          ];
 
-            parse5utils.append(htmlChildNode, linkTag);
-          }
+          parse5utils.append(htmlChildNode, linkTag);
         }
+        // }
       }
 
       // Create the script tag for the JS bundle

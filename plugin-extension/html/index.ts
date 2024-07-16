@@ -2,6 +2,7 @@ import { type RsbuildPlugin } from '@rsbuild/core';
 
 import { type PluginInterface } from '../types';
 import HtmlPlugin from './html-plugin/module';
+import { addScriptsAndStylesToCompilation } from './add-scripts-and-sttyles-to-compilation';
 
 /**
  * HtmlPlugin is responsible for handling the HTML file
@@ -41,10 +42,20 @@ export const html = ({ manifestPath }: PluginInterface): RsbuildPlugin => ({
       ...nonManifestHtml,
     };
 
+    addScriptsAndStylesToCompilation({
+      manifestPath: manifestPath,
+      includeList: htmlFields,
+    }).setup(api);
+
     api.modifyRsbuildConfig((config, { mergeRsbuildConfig }) => {
       return mergeRsbuildConfig(config, {
+        // source: {
+        //   entry: {
+
+        //   }
+        // },
         tools: {
-          // htmlPlugin: true,
+          htmlPlugin: false,
           rspack: {
             plugins: [
               new HtmlPlugin({

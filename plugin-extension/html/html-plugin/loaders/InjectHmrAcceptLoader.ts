@@ -8,7 +8,7 @@ import { type Schema } from 'schema-utils/declarations/validate';
 // Manifest fields
 import manifestFields from 'browser-extension-manifest-fields';
 
-import getAssetsFromHtml from '../lib/getAssetsFromHtml';
+import getAssetsFromHtml from '../lib/get-assets-from-html';
 import { type HtmlIncludeList } from '../types';
 import { type Manifest } from '../../../types';
 import { isUsingReact } from '../helpers/utils';

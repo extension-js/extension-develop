@@ -15,10 +15,10 @@ export default class CommonErrorsPlugin {
 
   apply(compiler: Compiler) {
     compiler.hooks.compilation.tap(
-      'HtmlPlugin (HandleCommonErrors)',
+      'html:handle-common-errors',
       (compilation) => {
         compilation.hooks.afterSeal.tapPromise(
-          'HtmlPlugin (HandleCommonErrors)',
+          'html:handle-common-errors',
           async () => {
             compilation.errors.forEach((error, index) => {
               // Handle "Module not found" errors.

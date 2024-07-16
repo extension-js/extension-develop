@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 // @ts-ignore
 import parse5utils from 'parse5-utils';
-import parseHtml from './parseHtml';
+import parseHtml from './parse-html';
 
 export interface ParsedHtmlAsset {
   css?: string[];

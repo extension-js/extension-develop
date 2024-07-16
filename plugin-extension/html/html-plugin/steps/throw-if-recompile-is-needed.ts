@@ -1,12 +1,8 @@
 import path from 'path';
 import fs from 'fs';
 import { type Compiler } from '@rspack/core';
-import manifestFields from 'browser-extension-manifest-fields';
-
 import { type IncludeList, type InternalPluginInterface } from '../../../types';
-
-import { type Manifest } from '../../../types';
-import getAssetsFromHtml from '../lib/getAssetsFromHtml';
+import getAssetsFromHtml from '../lib/get-assets-from-html';
 import error from '../helpers/errors';
 import { manifestFieldError } from '../helpers/messages';
 
@@ -39,7 +35,7 @@ export default class ThrowIfRecompileIsNeeded {
 
   private storeInitialHtmlAssets(htmlFields: Record<string, any>) {
     Object.entries(htmlFields).forEach(([key, resource]) => {
-      const htmlFile = resource?.html as string;
+      const htmlFile = resource as string;
 
       if (htmlFile) {
         if (!fs.existsSync(htmlFile)) {
@@ -56,17 +52,12 @@ export default class ThrowIfRecompileIsNeeded {
   }
 
   public apply(compiler: Compiler): void {
-    const manifest: Manifest = require(this.manifestPath);
-    const htmlFields = manifestFields(this.manifestPath, manifest as any).html;
-    const allEntries = {
-      ...htmlFields,
-      ...this.includeList,
-    };
+    const htmlFields = this.includeList || {};
 
-    this.storeInitialHtmlAssets(allEntries);
+    this.storeInitialHtmlAssets(htmlFields);
 
     compiler.hooks.make.tapAsync(
-      'HtmlPlugin (RunChromeExtensionPlugin)',
+      'html:throw-if-recompile-is-needed',
       (compilation, done) => {
         const files = compiler.modifiedFiles || new Set<string>();
         const changedFile = Array.from(files)[0];

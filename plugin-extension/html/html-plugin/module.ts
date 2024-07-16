@@ -1,17 +1,14 @@
-import path from 'path';
 import { type Compiler } from '@rspack/core';
 
-import { type HtmlIncludeList } from './types';
 import { type IncludeList, type InternalPluginInterface } from '../../types';
-import EmitHtmlFile from './steps/EmitHtmlFile';
-import AddAssetsToCompilation from './steps/AddAssetsToCompilation';
-import AddScriptsAndStylesToCompilation from './steps/AddScriptsAndStylesToCompilation';
-import UpdateHtmlFile from './steps/UpdateHtmlFile';
-import EnsureHMRForScripts from './steps/EnsureHMRForScripts';
-import AddToFileDependencies from './steps/AddToFileDependencies';
-import ThrowIfRecompileIsNeeded from './steps/ThrowIfRecompileIsNeeded';
-import HandleCommonErrors from './steps/HandleCommonErrors';
-import getAssetsFromHtml from './lib/getAssetsFromHtml';
+import EmitHtmlFile from './steps/emit-html-file';
+import AddAssetsToCompilation from './steps/add-assets-to-compilation';
+// import AddScriptsAndStylesToCompilation from '../add-scripts-and-sttyles-to-compilation';
+import UpdateHtmlFile from './steps/update-html-file';
+// import EnsureHMRForScripts from './steps/EnsureHMRForScripts';
+import AddToFileDependencies from './steps/html:add-to-file-dependencies';
+import ThrowIfRecompileIsNeeded from './steps/throw-if-recompile-is-needed';
+import HandleCommonErrors from './steps/handle-common-errors';
 
 /**
  * HtmlPlugin is responsible for handling the HTML file
@@ -65,10 +62,10 @@ export default class HtmlPlugin {
 
     // 3 - Adds the scripts and stylesheets within the HTML file
     // to the compilation.
-    new AddScriptsAndStylesToCompilation({
-      manifestPath: this.manifestPath,
-      includeList: this.includeList,
-    }).apply(compiler);
+    // new AddScriptsAndStylesToCompilation({
+    //   manifestPath: this.manifestPath,
+    //   includeList: this.includeList,
+    // }).apply(compiler);
 
     // 4 - Updates the HTML file with the new assets and entrypoints.
     new UpdateHtmlFile({
@@ -76,7 +73,7 @@ export default class HtmlPlugin {
       includeList: this.includeList,
     }).apply(compiler);
 
-    // // 5 - Ensure scripts within the HTML file are HMR enabled.
+    // 5 - Ensure scripts within the HTML file are HMR enabled.
     // new EnsureHMRForScripts({
     //   manifestPath: this.manifestPath,
     //   includeList: this.includeList,
@@ -97,7 +94,7 @@ export default class HtmlPlugin {
       includeList: this.includeList,
     }).apply(compiler);
 
-    // 7 - Handle common errors.
+    // 8 - Handle common errors.
     new HandleCommonErrors({
       manifestPath: this.manifestPath,
       includeList: this.includeList,

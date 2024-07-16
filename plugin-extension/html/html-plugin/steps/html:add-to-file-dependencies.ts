@@ -1,10 +1,11 @@
 import fs from 'fs';
+import path from 'path';
 import { type Compiler } from '@rspack/core';
 import { Compilation } from '@rspack/core';
 
 import { type IncludeList, type InternalPluginInterface } from '../../../types';
 
-import getAssetsFromHtml from '../lib/getAssetsFromHtml';
+import getAssetsFromHtml from '../lib/get-assets-from-html';
 
 export default class AddToFileDependencies {
   public readonly manifestPath: string;
@@ -17,11 +18,11 @@ export default class AddToFileDependencies {
 
   public apply(compiler: Compiler): void {
     compiler.hooks.thisCompilation.tap(
-      'HtmlPlugin (AddToFileDependencies)',
+      'html:add-to-file-dependencies',
       (compilation) => {
         compilation.hooks.processAssets.tap(
           {
-            name: 'HtmlPlugin (AddToFileDependencies)',
+            name: 'html:add-to-file-dependencies',
             stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONS,
           },
           (assets) => {
@@ -30,19 +31,15 @@ export default class AddToFileDependencies {
             const allEntries = this.includeList || {};
 
             for (const field of Object.entries(allEntries)) {
-              const [, resource] = field;
+              const [, featureDataPath] = field;
 
-              const resourceData = getAssetsFromHtml(
-                resource,
-                fs.readFileSync(resource, 'utf8'),
-              );
-
-              if (resource) {
+              if (featureDataPath) {
+                const resourceData = getAssetsFromHtml(featureDataPath);
                 const fileDependencies = new Set(compilation.fileDependencies);
 
-                if (fs.existsSync(resource)) {
+                if (fs.existsSync(featureDataPath)) {
                   const fileResources = [
-                    resource,
+                    featureDataPath,
                     ...(resourceData?.static || []),
                   ];
 
@@ -50,7 +47,7 @@ export default class AddToFileDependencies {
                     if (!fileDependencies.has(thisResource)) {
                       fileDependencies.add(thisResource);
 
-                      if (thisResource === resource) {
+                      if (thisResource === featureDataPath) {
                         compilation.fileDependencies.add(thisResource);
                       }
                     }

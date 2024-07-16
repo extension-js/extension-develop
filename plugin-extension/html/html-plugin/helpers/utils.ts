@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import { type Compilation } from '@rspack/core';
 import { type Manifest, type IncludeList } from '../../../types';
-import getAssetsFromHtml from '../lib/getAssetsFromHtml';
+import getAssetsFromHtml from '../lib/get-assets-from-html';
 
 function isUsingReact(projectDir: string) {
   const packageJsonPath = path.join(projectDir, 'package.json');

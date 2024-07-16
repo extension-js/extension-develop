@@ -3,10 +3,9 @@ import { sources, Compilation } from '@rspack/core';
 
 import { type IncludeList, type InternalPluginInterface } from '../../../types';
 
-import patchHtml from '../lib/patchHtml';
+import patchHtml from '../lib/patch-html';
 import { shouldExclude } from '../helpers/utils';
 import getFilePath from '../helpers/getFilePath';
-import getAssetsFromHtml from '../lib/getAssetsFromHtml';
 
 export default class UpdateHtmlFile {
   public readonly manifestPath: string;
@@ -19,12 +18,11 @@ export default class UpdateHtmlFile {
 
   public apply(compiler: Compiler): void {
     compiler.hooks.thisCompilation.tap(
-      'HtmlPlugin (UpdateHtmlFile)',
+      'html:update-html-file',
       (compilation) => {
         compilation.hooks.processAssets.tap(
           {
-            name: 'HtmlPlugin (UpdateHtmlFile)',
-            // Summarize the list of existing assets.
+            name: 'html:update-html-file',
             stage: Compilation.PROCESS_ASSETS_STAGE_DERIVED,
           },
           () => {
@@ -33,21 +31,19 @@ export default class UpdateHtmlFile {
             const htmlEntries = this.includeList || {};
 
             for (const field of Object.entries(htmlEntries)) {
-              const [feature, resource] = field;
-              const html = resource;
+              const [featureName, featureDataPath] = field;
 
-              // Resources from the manifest lib can come as undefined.
-              if (html) {
+              if (featureDataPath) {
                 const updatedHtml: string = patchHtml(
                   compilation,
-                  feature,
-                  html,
+                  featureName,
+                  featureDataPath,
                   htmlEntries,
                 );
 
-                if (!shouldExclude(html, ['public/'])) {
+                if (!shouldExclude(featureDataPath, ['public/'])) {
                   const rawSource = new sources.RawSource(updatedHtml);
-                  const filepath = getFilePath(feature, '.html');
+                  const filepath = getFilePath(featureName, '.html');
                   compilation.updateAsset(filepath, rawSource);
                 }
               }

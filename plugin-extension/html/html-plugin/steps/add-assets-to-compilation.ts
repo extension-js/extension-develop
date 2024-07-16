@@ -2,13 +2,10 @@ import fs from 'fs';
 import path from 'path';
 import { type Compiler } from '@rspack/core';
 import { sources, Compilation } from '@rspack/core';
-
 import { type IncludeList, type InternalPluginInterface } from '../../../types';
-
 import errors from '../helpers/errors';
-import { shouldExclude } from '../helpers/utils';
 import * as fileUtils from '../helpers/utils';
-import getAssetsFromHtml from '../lib/getAssetsFromHtml';
+import getAssetsFromHtml from '../lib/get-assets-from-html';
 
 export default class AddAssetsToCompilation {
   public readonly manifestPath: string;
@@ -21,7 +18,7 @@ export default class AddAssetsToCompilation {
 
   public apply(compiler: Compiler): void {
     compiler.hooks.thisCompilation.tap(
-      'HtmlPlugin (AddAssetsToCompilation)',
+      'html:add-assets-to-compilation',
       (compilation) => {
         compilation.hooks.processAssets.tap(
           {
@@ -32,28 +29,31 @@ export default class AddAssetsToCompilation {
           () => {
             if (compilation.errors.length > 0) return;
 
-            const manifestEntries = this.includeList || {};
+            const htmlFields = Object.entries(this.includeList || {});
 
-            for (const field of Object.entries(manifestEntries)) {
-              const [feature, resource] = field;
-              const featureName = feature + '.html';
+            for (const field of htmlFields) {
+              const [featureName, featureDataPath] = field;
+              const featureNameWithHtml = featureName + '.html';
 
               // Resources from the manifest lib can come as undefined.
-              if (resource) {
-                const compilationAsset = compilation.getAsset(featureName);
+              if (featureDataPath) {
+                const compilationAsset =
+                  compilation.getAsset(featureNameWithHtml);
+
                 if (compilationAsset) {
                   const htmlSource = compilationAsset.source
                     .source()
                     .toString();
+
                   const staticAssets = getAssetsFromHtml(
-                    resource,
+                    featureDataPath,
                     htmlSource,
                   )?.static;
 
                   const fileAssets = [...new Set(staticAssets)];
 
                   for (const asset of fileAssets) {
-                    if (!shouldExclude(asset, ['public/'])) {
+                    if (!asset.includes('public/')) {
                       // Handle missing static assets. This is not covered
                       // by HandleCommonErrorsPlugin because static assets
                       // are not entrypoints.
@@ -78,7 +78,7 @@ export default class AddAssetsToCompilation {
                             errors.fileNotFoundWarn(
                               compilation,
                               this.manifestPath,
-                              resource,
+                              featureDataPath,
                               asset,
                             );
                             return;
