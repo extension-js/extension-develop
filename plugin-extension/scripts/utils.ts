@@ -16,11 +16,8 @@ export function getRelativePath(from: string, to: string) {
 }
 
 export function getScriptEntries(
-  manifestPath: string,
   scriptPath: string | string[] | undefined,
 ): string[] {
-  const projectPath = path.dirname(manifestPath);
-
   const scriptEntries = Array.isArray(scriptPath)
     ? scriptPath || []
     : scriptPath
@@ -28,14 +25,13 @@ export function getScriptEntries(
       : [];
 
   const fileAssets = scriptEntries.filter((scriptAsset) => {
-    const asset = path.resolve(projectPath, scriptAsset);
     const validFile =
       // File exists
-      fs.existsSync(asset) &&
+      fs.existsSync(scriptAsset) &&
       // Not in some public/ folder
-      !asset.includes('public/');
+      !scriptAsset.includes('public/');
 
-    const assetExtension = path.extname(asset);
+    const assetExtension = path.extname(scriptAsset);
 
     return validFile && scriptAsset?.includes(assetExtension);
   });
@@ -44,11 +40,8 @@ export function getScriptEntries(
 }
 
 export function getCssEntries(
-  manifestPath: string,
   scriptPath: string | string[] | undefined,
 ): string[] {
-  const projectPath = path.dirname(manifestPath);
-
   const scriptEntries = Array.isArray(scriptPath)
     ? scriptPath || []
     : scriptPath
@@ -56,19 +49,17 @@ export function getCssEntries(
       : [];
 
   const fileAssets = scriptEntries.filter((scriptAsset) => {
-    const asset = path.resolve(projectPath, scriptAsset);
-
     const validFile =
       // File exists
-      fs.existsSync(asset) &&
+      fs.existsSync(scriptAsset) &&
       // Not in some public/ folder
-      !asset.includes('public/');
+      !scriptAsset.includes('public/');
 
     return (
-      (validFile && asset.endsWith('.css')) ||
-      asset.endsWith('.scss') ||
-      asset.endsWith('.sass') ||
-      asset.endsWith('.less')
+      (validFile && scriptAsset.endsWith('.css')) ||
+      scriptAsset.endsWith('.scss') ||
+      scriptAsset.endsWith('.sass') ||
+      scriptAsset.endsWith('.less')
     );
   });
 

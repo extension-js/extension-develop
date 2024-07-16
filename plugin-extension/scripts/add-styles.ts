@@ -27,10 +27,10 @@ export const addStyles = ({
     for (const contentScript of scriptEntries) {
       const [feature, scriptPath] = contentScript;
 
-      const scriptImports = [...getScriptEntries(manifestPath, scriptPath)];
+      const scriptImports = [...getScriptEntries(scriptPath)];
       // content_scripts-1: ['content_script-a.css', 'content_script-b.css']
       // content_scripts-2: ['content_script-c.css', 'content_script-d.css']
-      const cssImports = getCssEntries(manifestPath, scriptPath);
+      const cssImports = getCssEntries(scriptPath);
 
       // 1 - Since having a .js file is mandatory for HMR to work, if
       // during development if user has a content_script.css but not
@@ -44,6 +44,9 @@ export const addStyles = ({
 
         api.modifyRsbuildConfig((config, { mergeRsbuildConfig }) => {
           return mergeRsbuildConfig(config, {
+            tools: {
+              htmlPlugin: false,
+            },
             source: {
               ...config.source,
               [feature]: { import: [minimumContentFile] },
@@ -66,18 +69,44 @@ export const addStyles = ({
     // 2 - Now that we have all the CSS files that need to be injected
     // as dynamic imports in the content_script.js files, we create a
     // loader that will do just that.
-    // compiler.options.module.rules.push({
-    //   // valid tests: js, mjs, ts, tsx, jsx, mjsx, mts, mtsx
-    //   test: /\.(m?j(sx?|sx?)?|m?t(sx?|sx?))$/,
-    //   use: [
-    //     {
-    //       loader: path.resolve(__dirname, './loaders/InjectDynamicCssLoader'),
-    //       options: {
-    //         manifestPath: this.manifestPath,
-    //         cssImportPaths
-    //       }
-    //     }
-    //   ]
-    // })
+    // valid tests: js, mjs, ts, tsx, jsx, mjsx, mts, mtsx
+    const beautifulFileContent = `/** 
+    * Welcome to to your content_scripts CSS file during development!
+    * To speed up the development process, your styles
+    * are being injected directly into the head of the webpage,
+    * and will be removed when you build your application, along
+    * with this file. If you are seeing this file in a production build,
+    * it means that something is wrong with your build configuration.
+    */`;
+    api.transform({ test: /\.(m?j(sx?|sx?)?|m?t(sx?|sx?))$/ }, (self) => {
+      cssImportPaths.forEach(({ feature, scriptPath, cssImports }) => {
+        if (self.resourcePath.includes(scriptPath)) {
+          // Dynamically generate import statements for CSS files
+          const dynamicImports = cssImports
+            .map((cssImport) => {
+              const [, contentName] = feature.split('/');
+              const index = contentName.split('-')[1];
+              const filename = path.basename(cssImport);
+              const chunkName = `web_accessible_resources/resource-${index}/${filename.replace('.', '_')}`;
+              // Ensure to resolve the path relative to the manifest or webpack context
+              // const resolvedPath = getRelativePath(options.manifestPath, cssImport)
+              // Generate a dynamic import statement for each CSS file
+              return (
+                `import(/* webpackChunkName: "${chunkName}" */ '${cssImport}')` +
+                `.then(css => console.info('content_script.css loaded', css))` +
+                `.catch(err => console.error(err));`
+              );
+            })
+            .join('\n');
+
+          self.emitFile(`${feature}.css`, beautifulFileContent);
+
+          // Prepend the dynamic imports to the module source
+          self.code = `${dynamicImports}\n${self.code}`;
+        }
+      });
+
+      return self.code;
+    });
   },
 });

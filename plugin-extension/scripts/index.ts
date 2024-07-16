@@ -1,8 +1,9 @@
 import { type RsbuildPlugin } from '@rsbuild/core';
 
 import { type PluginInterface } from '../types';
-import { addScripts } from './addScripts';
-import { addStyles } from './addStyles';
+import { addScripts } from './add-scripts';
+import { addStyles } from './add-styles';
+// import { injectChromeExtensionUrlPrefix } from './inject-chrome-extension-url-prefix';
 
 /**
  * ScriptsPlugin is responsible for handiling all possible JavaScript
@@ -53,7 +54,7 @@ export const scripts = ({ manifestPath }: PluginInterface): RsbuildPlugin => ({
 
     // 2 - Ensure scripts are HMR enabled by adding the HMR accept code.
     // if (process.env.NODE_ENV === 'development') {
-    //   AddHmrAcceptCode(compiler, this.manifestPath)
+    //   addHmrAcceptCode(manifestPath)
     // }
 
     // 3 - Fix the issue with the public path not being
@@ -61,18 +62,18 @@ export const scripts = ({ manifestPath }: PluginInterface): RsbuildPlugin => ({
     // See https://github.com/cezaraugusto/extension.js/issues/95
     // See https://github.com/cezaraugusto/extension.js/issues/96
     // if (process.env.NODE_ENV === 'production') {
-    //   new AddPublicPathRuntimeModule().apply(compiler)
+    //   addPublicPathRuntimeModule().apply(compiler)
     // }
 
     // 4 - Fix the issue where assets imported via content_scripts
     // running in the MAIN world could not find the correct public path.
-    // AddDynamicPublicPath(compiler, this.manifestPath)
+    // injectChromeExtensionUrlPrefix({ manifestPath });
 
     // 5 - Fix the issue of content_scripts not being able to import
     // CSS files via import statements. This loader adds the
     // is_content_css_import=true query param to CSS imports in
     // content_scripts. This skips the MiniCssExtractPlugin loader
     // and allows the CSS to be injected in the DOM via <style> tags.
-    // AddQueryParamFromImportedCss(compiler, this.manifestPath)
+    // addQueryParamFromImportedCss(manifestPath)
   },
 });
